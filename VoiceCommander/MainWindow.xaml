@@ -40,11 +40,11 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <TreeView Background="#fdfaf4"></TreeView>
+            <ListView Background="#fdfaf4"></ListView>
 
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="#E0C9AD"></GridSplitter>
             
-            <TreeView Background="#fdfaf4" Grid.Column="2"></TreeView>
+            <ListView Background="#fdfaf4" Grid.Column="2"></ListView>
             
         </Grid>
         
