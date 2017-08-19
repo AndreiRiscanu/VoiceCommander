@@ -29,6 +29,7 @@
             </MenuItem>
         </Menu>
 
+        <!-- Textbox used for user input -->
         <TextBox Padding="2" Background="#eee" DockPanel.Dock="Bottom" MaxLength="298" />
 
         <!-- Panels with which the user will interact -->
@@ -39,28 +40,12 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!-- Panel used for user input -->
-            <TextBox Background="#fdfaf4" IsReadOnly="True" Grid.Column="0" />
-            
+            <TreeView Background="#fdfaf4"></TreeView>
+
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="#E0C9AD"></GridSplitter>
-            <!-- Panel used to display the output of the command -->
             
-            <TreeView x:Name="FolderView" Background="#fdfaf4" Grid.Column="2">
-                <TreeView.Resources>
-                    <Style TargetType="{x:Type TreeViewItem}">
-                        <Setter Property="HeaderTemplate">
-                            <Setter.Value>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <Image Width="20" Margin="3" Source="Images/drive.png" />
-                                        <TextBlock VerticalAlignment="Center" Text="Some Folder" />
-                                    </StackPanel>
-                                </DataTemplate>
-                            </Setter.Value>
-                        </Setter>
-                    </Style>
-                </TreeView.Resources>
-            </TreeView>
+            <TreeView Background="#fdfaf4" Grid.Column="2"></TreeView>
+            
         </Grid>
         
     </DockPanel>
