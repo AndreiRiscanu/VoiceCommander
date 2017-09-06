@@ -30,7 +30,7 @@
         </Menu>
 
         <!-- Textbox used for user input -->
-        <TextBox Padding="2" Background="#eee" DockPanel.Dock="Bottom" MaxLength="298" />
+        <TextBox Padding="2" Background="#eee" DockPanel.Dock="Bottom" MaxLength="298" Margin="1,0,-1.4,0" />
 
         <!-- Panels with which the user will interact -->
         <Grid>
@@ -43,9 +43,17 @@
             <ListView Background="#fdfaf4"></ListView>
 
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="#E0C9AD"></GridSplitter>
-            
-            <ListView Background="#fdfaf4" Grid.Column="2"></ListView>
-            
+
+            <!-- Command results will be placed in this textbox -->
+            <TextBox>
+                <TextBox.VerticalScrollBarVisibility>Auto</TextBox.VerticalScrollBarVisibility>
+                <TextBox.IsReadOnly>True</TextBox.IsReadOnly>
+                <TextBox.AcceptsReturn>True</TextBox.AcceptsReturn>
+                <TextBox.TextWrapping>Wrap</TextBox.TextWrapping>
+                <TextBox.Background>#fdfaf4</TextBox.Background>
+                <Grid.Column>2</Grid.Column>
+            </TextBox>
+
         </Grid>
         
     </DockPanel>
