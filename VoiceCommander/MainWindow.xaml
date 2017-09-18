@@ -4,6 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VoiceCommander"
+        xmlns:ui="clr-namespace:VoiceCommander.UI"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="1000">
 
@@ -40,19 +41,12 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ListView Background="#fdfaf4"></ListView>
+            <ui:ListView />
 
             <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="#E0C9AD"></GridSplitter>
 
             <!-- Command results will be placed in this textbox -->
-            <TextBox>
-                <TextBox.VerticalScrollBarVisibility>Auto</TextBox.VerticalScrollBarVisibility>
-                <TextBox.IsReadOnly>True</TextBox.IsReadOnly>
-                <TextBox.AcceptsReturn>True</TextBox.AcceptsReturn>
-                <TextBox.TextWrapping>Wrap</TextBox.TextWrapping>
-                <TextBox.Background>#fdfaf4</TextBox.Background>
-                <Grid.Column>2</Grid.Column>
-            </TextBox>
+            <ui:OutputTextBox Grid.Column="2"/>
 
         </Grid>
         
