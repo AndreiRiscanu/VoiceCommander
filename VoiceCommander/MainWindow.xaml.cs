@@ -12,7 +12,7 @@ namespace VoiceCommander
         {
             InitializeComponent();
 
-            this.DataContext = new DirectoryStructureViewModel();
+            this.DataContext = DirectoryStructureViewModel.GetDirectoryStructureInstance();
         }
     }
 }

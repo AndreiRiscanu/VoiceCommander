@@ -1,6 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using VoiceCommander.Data;
 using VoiceCommander.ViewModels;
@@ -9,7 +12,7 @@ namespace VoiceCommander.ViewModels
 {
     public class DirectoryItemViewModel : BaseViewModel
     {
-        #region Public Functions
+        #region Public
 
         /// <summary>
         /// The type of this item (drive, file, folder)
@@ -24,18 +27,17 @@ namespace VoiceCommander.ViewModels
         /// <summary>
         /// The name of this discovery item
         /// </summary>
-        public string Name { get { return this.Type == DirectoryItemType.Drive ? this.FullPath : DirectoryStructure.GetFileFolderName(this.FullPath); } }
-
-        /// <summary>
-        /// A list of all the children contained inside this item
-        /// </summary>
-        public ObservableCollection<DirectoryItemViewModel> Children { get; set; }
-
-        /// <summary>
-        /// Indicates if this item can be entered
-        /// </summary>
-        public bool CanEnter { get { return this.Type != DirectoryItemType.File; } }
-
+        public string Name
+        {
+            get
+            {
+                // If it's the first item, set it to be the "go back" component
+                return this.Type == DirectoryItemType.Drive ?
+                    this.FullPath : this.FullPath == DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].FullPath ?
+                    ".." : DirectoryStructure.GetFileFolderName(this.FullPath);
+            }
+        }
+        
         public ICommand EnterCommand { get; set; }
 
         #endregion
@@ -52,30 +54,64 @@ namespace VoiceCommander.ViewModels
 
         #endregion
 
-        #region Helper Functions
+        #region Private
 
+        /// <summary>
+        /// The function that will be called when an item is double-clicked
+        /// </summary>
         private void Enter()
         {
             // We cannot enter a file
             if (this.Type == DirectoryItemType.File)
                 return;
+            
+            DirectoryInfo parentInfo = new DirectoryInfo(this.FullPath);
+            
+            parentInfo = parentInfo.Parent;
 
-            // Get all the children from the selected directory
+            #region Go Back
+
+            // If the user double-clicks the "go back" item...
+            if (this.Name == "..")
+            {
+                // Check so that the parent folder isn't the root and then set the path to it
+                if (parentInfo != null)
+                    this.FullPath = parentInfo.FullName;
+                // Else, we need to populate with the users drives
+                else
+                {
+                    // Remove the current items shown
+                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Clear();
+
+                    var drives = DirectoryStructure.GetLogicalDrives();
+
+                    foreach (var child in drives.Select(drive => new DirectoryItemViewModel(drive.FullPath, DirectoryItemType.Drive)))
+                    {
+                        DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(child);
+                    }
+
+                    return;
+                }
+            }
+
+            #endregion
+
+            #region Enter Folder
+
+            DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Clear();
+
+            var parent = new DirectoryItemViewModel(this.FullPath, DirectoryItemType.Folder);
+            DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(parent);
+
             var children = DirectoryStructure.GetDirectoryContents(this.FullPath);
-
-            // Remove the current items shown
-            DirectoryStructureViewModel.Items.Clear();
-
-            // Used to get back to the selected drive's root
-            // TODO: find a way to go back in the listview
-            var root = new DirectoryItemViewModel(Path.GetPathRoot(this.FullPath), DirectoryItemType.Folder);
-            DirectoryStructureViewModel.Items.Add(root);
 
             // Add all files/folders from the selected directory to the view
             foreach (var child in children.Select(content => new DirectoryItemViewModel(content.FullPath, content.Type)))
             {
-                DirectoryStructureViewModel.Items.Add(child);
+                DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(child);
             }
+
+            #endregion
         }
 
         #endregion

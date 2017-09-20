@@ -12,17 +12,21 @@
 
         <ListView.ItemTemplate>
             <DataTemplate>
-                <Grid Margin="2">
+                <Grid Margin="5">
+                    
+                    <!-- The EnterCommand handler will be raised when double-clicking a drive/folder -->
                     <Grid.InputBindings>
                         <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EnterCommand, Mode=TwoWay}" />
                     </Grid.InputBindings>
 
+                    <!-- The image and item name -->
                     <StackPanel Orientation="Horizontal">
                         <Image Width="20"
                                Source="{Binding Type,
                                Converter={x:Static converter:HeaderToImageConverter.Instance}}" />
                         <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
                     </StackPanel>
+                    
                 </Grid>
             </DataTemplate>
         </ListView.ItemTemplate>
