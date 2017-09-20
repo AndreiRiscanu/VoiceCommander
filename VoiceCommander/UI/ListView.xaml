@@ -8,7 +8,10 @@
              xmlns:items="clr-namespace:VoiceCommander.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <ListView Background="#fdfaf4"  Name="filesView" ItemsSource="{Binding Items}">
+    <ListView ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+              Background="#fdfaf4"
+              Name="filesView"
+              ItemsSource="{Binding Items}">
 
         <ListView.ItemTemplate>
             <DataTemplate>
@@ -17,6 +20,7 @@
                     <!-- The image and item name -->
                     <StackPanel Orientation="Horizontal">
                         <Image Width="20"
+                               Margin="0,0,5,0"
                                Source="{Binding Type,
                                Converter={x:Static converter:HeaderToImageConverter.Instance}}" />
                         <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
@@ -24,7 +28,7 @@
                     
                     <!-- The EnterCommand handler will be raised when double-clicking a drive/folder -->
                     <Button Opacity="0"
-                            Width="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=ActualWidth}" >
+                            Width="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=ActualWidth}">
                         <Button.InputBindings>
                             <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EnterCommand}" />
                         </Button.InputBindings>
