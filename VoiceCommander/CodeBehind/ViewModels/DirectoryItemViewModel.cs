@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using VoiceCommander.Commands;
 using VoiceCommander.Data;
 
 namespace VoiceCommander.ViewModels
@@ -35,6 +36,23 @@ namespace VoiceCommander.ViewModels
         
         public ICommand EnterCommand { get; set; }
 
+        /// <summary>
+        /// Used to show the full path to the current item
+        /// </summary>
+        public string GetParent
+        {
+            get
+            {
+                // The View looks at the first element and if it's not the Go Back folder (".."), it means we're in the root
+                if (this.Name == "..")
+                {
+                    return this.FullPath;
+                }
+
+                return null;
+            }
+        }
+
         #endregion
 
         #region Constructor
@@ -59,9 +77,9 @@ namespace VoiceCommander.ViewModels
             // We cannot enter a file
             if (this.Type == DirectoryItemType.File)
                 return;
-            
+
             DirectoryInfo parentInfo = new DirectoryInfo(this.FullPath);
-            
+
             parentInfo = parentInfo.Parent;
 
             #region Go Back
@@ -94,13 +112,14 @@ namespace VoiceCommander.ViewModels
             #region Enter Folder
 
             DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Clear();
-
+            
+            // We need to add the Go Back ("..") item first
             var parent = new DirectoryItemViewModel(this.FullPath, DirectoryItemType.Folder);
             DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(parent);
-
+            
             var children = DirectoryStructure.GetDirectoryContents(this.FullPath);
 
-            // Add all files/folders from the selected directory to the view
+            // Populate the View with the folder's content
             foreach (var child in children.Select(content => new DirectoryItemViewModel(content.FullPath, content.Type)))
             {
                 DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(child);

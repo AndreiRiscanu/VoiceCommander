@@ -40,7 +40,7 @@ namespace VoiceCommander
             #region Get Files
 
 
-            // Try and get directories from the folder ignoring any issues doing so
+            // Try and get files from the folder ignoring any issues doing so
             try
             {
                 var files = Directory.GetFiles(fullPath);

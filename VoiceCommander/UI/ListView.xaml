@@ -8,6 +8,7 @@
              xmlns:items="clr-namespace:VoiceCommander.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
+    
     <ListView ScrollViewer.HorizontalScrollBarVisibility="Hidden"
               VirtualizingPanel.IsVirtualizing="True"
               VirtualizingPanel.ScrollUnit="Item"
@@ -19,7 +20,7 @@
             <DataTemplate>
                 
                 <!-- The image and item name -->
-                <Grid Width="{Binding ActualWidth, ElementName=filesView}" 
+                <Grid Width="{Binding ActualWidth, ElementName=filesView, Converter={x:Static converter:GridWidthToListViewWidthConverter.Instance}}" 
                       Background="Transparent">
                     
                     <Grid.ColumnDefinitions>
@@ -27,33 +28,27 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
+                    <!-- Drive, file or folder -->
                     <Image Grid.Column="0"
                            Margin="0,0,5,0"
                            Name="itemType"
                            Source="{Binding Type,
                            Converter={x:Static converter:HeaderToImageConverter.Instance}}" />
 
+                    <!-- The text is binded to the image size, so they'll expand/shrink together -->
                     <TextBlock Grid.Column="1"
                                VerticalAlignment="Center"
                                FontSize="{Binding ActualHeight,
                                ElementName=itemType, Converter={x:Static converter:ImageSizeToFontSizeConverter.Instance}}"
                                Text="{Binding Name}" />
 
+                    <!-- The command to enter a drive/folder is called from here -->
                     <Grid.InputBindings>
                         <KeyBinding Key="Enter" Command="{Binding EnterCommand, Mode=TwoWay}" />
                         <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EnterCommand, Mode=TwoWay}" />
                     </Grid.InputBindings>
                         
                 </Grid>
-                    
-                <!-- The EnterCommand handler will be raised when double-clicking a drive/folder -->
-                <!--<Button Opacity="0"
-                        Width="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=ActualWidth}">
-                    <Button.InputBindings>
-                        <MouseBinding Gesture="LeftDoubleClick"
-                                        Command="{Binding EnterCommand}" />
-                    </Button.InputBindings>
-                </Button>-->
                     
             </DataTemplate>
         </ListView.ItemTemplate>

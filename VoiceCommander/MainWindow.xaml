@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:VoiceCommander"
         xmlns:ui="clr-namespace:VoiceCommander.UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1000">
+        Title="MainWindow" Height="600" Width="1000"
+                           MinHeight="200" MinWidth="400">
 
     <DockPanel Background="#E0C9AD">
         <!-- Menu bar -->
@@ -35,29 +36,26 @@
                      Padding="5,1,5,1"
                      Margin="5,0,5,1"
                      IsReadOnly="True"
-                     Text="{Binding Items[0].FullPath}"/>
+                     Text="{Binding Items[0].GetParent, Mode=OneWay}"/>
         </DockPanel>
         
 
         <!-- Textbox used for user input -->
-        <TextBox Margin="5,0,5,5" Padding="2" Background="White" DockPanel.Dock="Bottom" MaxLength="298" />
+        <TextBox Margin="5,1,5,5" Padding="2" Background="White" DockPanel.Dock="Bottom" MaxLength="298" />
         
         <!-- Panels with which the user will interact -->
         <Grid Margin="5,0,5,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="5" />
+                <ColumnDefinition Width="4" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <DockPanel>
-                
-                <ui:ListView />
-            </DockPanel>
-            
+            <ui:ListView />
+
             <GridSplitter Grid.Column="1"
-                          HorizontalAlignment="Stretch"
-                          Background="#E0C9AD" />
+                        HorizontalAlignment="Stretch"
+                        Background="#E0C9AD" />
 
             <!-- Command results will be placed in this textbox -->
             <ui:OutputTextBox Grid.Column="2"/>

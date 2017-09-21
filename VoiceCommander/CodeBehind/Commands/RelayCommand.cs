@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Input;
 
-namespace VoiceCommander.ViewModels
+namespace VoiceCommander.Commands
 {
     /// <summary>
     /// A basic command that runs an Action
