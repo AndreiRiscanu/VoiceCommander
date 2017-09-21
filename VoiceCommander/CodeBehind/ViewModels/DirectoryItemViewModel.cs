@@ -28,7 +28,7 @@ namespace VoiceCommander.ViewModels
             {
                 // If it's the first item, set it to be the "go back" component
                 return this.Type == DirectoryItemType.Drive ?
-                    this.FullPath : this.FullPath == DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].FullPath ?
+                    this.FullPath : this.FullPath == DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.First().FullPath ?
                     ".." : DirectoryStructure.GetFileFolderName(this.FullPath);
             }
         }

@@ -8,42 +8,56 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="1000">
 
-    <DockPanel>
+    <DockPanel Background="#E0C9AD">
         <!-- Menu bar -->
-        <Menu DockPanel.Dock="Top" Padding="1" Background="#E0C9AD">
-            <MenuItem Header="Menu">
-                <MenuItem Header="1" />
-                <MenuItem Header="2" />
-                <MenuItem Header="3" />
-            </MenuItem>
+        <DockPanel DockPanel.Dock="Top">
+            <Menu DockPanel.Dock="Top" Padding="1" Background="#E0C9AD">
+                <MenuItem Header="Menu">
+                    <MenuItem Header="1" />
+                    <MenuItem Header="2" />
+                    <MenuItem Header="3" />
+                </MenuItem>
 
-            <MenuItem Header="Options">
-                <MenuItem Header="1" />
-                <MenuItem Header="2" />
-                <MenuItem Header="3" />
-            </MenuItem>
+                <MenuItem Header="Options">
+                    <MenuItem Header="1" />
+                    <MenuItem Header="2" />
+                    <MenuItem Header="3" />
+                </MenuItem>
 
-            <MenuItem Header="Help">
-                <MenuItem Header="1" />
-                <MenuItem Header="2" />
-                <MenuItem Header="3" />
-            </MenuItem>
-        </Menu>
+                <MenuItem Header="Help">
+                    <MenuItem Header="1" />
+                    <MenuItem Header="2" />
+                    <MenuItem Header="3" />
+                </MenuItem>
+            </Menu>
+            <TextBox DockPanel.Dock="Top"
+                     Background="#eee"
+                     Padding="5,1,5,1"
+                     Margin="5,0,5,1"
+                     IsReadOnly="True"
+                     Text="{Binding Items[0].FullPath}"/>
+        </DockPanel>
+        
 
         <!-- Textbox used for user input -->
-        <TextBox Padding="2" Background="#eee" DockPanel.Dock="Bottom" MaxLength="298" Margin="1,0,-1.4,0" />
-
+        <TextBox Margin="5,0,5,5" Padding="2" Background="White" DockPanel.Dock="Bottom" MaxLength="298" />
+        
         <!-- Panels with which the user will interact -->
-        <Grid>
+        <Grid Margin="5,0,5,0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="5" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <ui:ListView />
-
-            <GridSplitter Grid.Column="1" HorizontalAlignment="Stretch" Background="#E0C9AD"></GridSplitter>
+            <DockPanel>
+                
+                <ui:ListView />
+            </DockPanel>
+            
+            <GridSplitter Grid.Column="1"
+                          HorizontalAlignment="Stretch"
+                          Background="#E0C9AD" />
 
             <!-- Command results will be placed in this textbox -->
             <ui:OutputTextBox Grid.Column="2"/>

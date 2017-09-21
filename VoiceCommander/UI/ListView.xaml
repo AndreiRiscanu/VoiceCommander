@@ -9,31 +9,52 @@
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
     <ListView ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+              VirtualizingPanel.IsVirtualizing="True"
+              VirtualizingPanel.ScrollUnit="Item"
               Background="#fdfaf4"
               Name="filesView"
               ItemsSource="{Binding Items}">
 
         <ListView.ItemTemplate>
             <DataTemplate>
-                <Grid Margin="5">
+                
+                <!-- The image and item name -->
+                <Grid Width="{Binding ActualWidth, ElementName=filesView}" 
+                      Background="Transparent">
                     
-                    <!-- The image and item name -->
-                    <StackPanel Orientation="Horizontal">
-                        <Image Width="20"
-                               Margin="0,0,5,0"
-                               Source="{Binding Type,
-                               Converter={x:Static converter:HeaderToImageConverter.Instance}}" />
-                        <TextBlock VerticalAlignment="Center" Text="{Binding Name}" />
-                    </StackPanel>
-                    
-                    <!-- The EnterCommand handler will be raised when double-clicking a drive/folder -->
-                    <Button Opacity="0"
-                            Width="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=ActualWidth}">
-                        <Button.InputBindings>
-                            <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EnterCommand}" />
-                        </Button.InputBindings>
-                    </Button>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.07*" MinWidth="25" MaxWidth="40" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Image Grid.Column="0"
+                           Margin="0,0,5,0"
+                           Name="itemType"
+                           Source="{Binding Type,
+                           Converter={x:Static converter:HeaderToImageConverter.Instance}}" />
+
+                    <TextBlock Grid.Column="1"
+                               VerticalAlignment="Center"
+                               FontSize="{Binding ActualHeight,
+                               ElementName=itemType, Converter={x:Static converter:ImageSizeToFontSizeConverter.Instance}}"
+                               Text="{Binding Name}" />
+
+                    <Grid.InputBindings>
+                        <KeyBinding Key="Enter" Command="{Binding EnterCommand, Mode=TwoWay}" />
+                        <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EnterCommand, Mode=TwoWay}" />
+                    </Grid.InputBindings>
+                        
                 </Grid>
+                    
+                <!-- The EnterCommand handler will be raised when double-clicking a drive/folder -->
+                <!--<Button Opacity="0"
+                        Width="{Binding RelativeSource={RelativeSource AncestorType=ListViewItem}, Path=ActualWidth}">
+                    <Button.InputBindings>
+                        <MouseBinding Gesture="LeftDoubleClick"
+                                        Command="{Binding EnterCommand}" />
+                    </Button.InputBindings>
+                </Button>-->
+                    
             </DataTemplate>
         </ListView.ItemTemplate>
 

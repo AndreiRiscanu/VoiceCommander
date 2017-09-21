@@ -61,6 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CodeBehind\Converters\ImageSizeToFontSizeConverter.cs" />
     <Compile Include="CodeBehind\DirectoryStructure.cs" />
     <Compile Include="CodeBehind\Data\DirectoryItem.cs" />
     <Compile Include="CodeBehind\Data\DirectoryItemType.cs" />
