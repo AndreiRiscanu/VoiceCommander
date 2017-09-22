@@ -61,6 +61,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CodeBehind\Commands\ExecuteCommand.cs" />
     <Compile Include="CodeBehind\Converters\GridWidthToListViewWidthConverter.cs" />
     <Compile Include="CodeBehind\Converters\ImageSizeToFontSizeConverter.cs" />
     <Compile Include="CodeBehind\DirectoryStructure.cs" />
@@ -68,11 +69,18 @@
     <Compile Include="CodeBehind\Data\DirectoryItemType.cs" />
     <Compile Include="CodeBehind\Converters\HeaderToImageConverter.cs" />
     <Compile Include="CodeBehind\ViewModels\BaseViewModel.cs" />
+    <Compile Include="CodeBehind\ViewModels\CommandLineViewModel.cs" />
     <Compile Include="CodeBehind\ViewModels\DirectoryItemViewModel.cs" />
     <Compile Include="CodeBehind\ViewModels\DirectoryStructureViewModel.cs" />
     <Compile Include="CodeBehind\Commands\RelayCommand.cs" />
+    <Compile Include="UI\CommandLineView.xaml.cs">
+      <DependentUpon>CommandLineView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UI\ListView.xaml.cs">
       <DependentUpon>ListView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UI\MenuView.xaml.cs">
+      <DependentUpon>MenuView.xaml</DependentUpon>
     </Compile>
     <Compile Include="UI\OutputTextBox.xaml.cs">
       <DependentUpon>OutputTextBox.xaml</DependentUpon>
@@ -89,7 +97,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="UI\CommandLineView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UI\ListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UI\MenuView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

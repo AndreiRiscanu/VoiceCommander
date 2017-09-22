@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using VoiceCommander.ViewModels;
 
 namespace VoiceCommander.UI
 {
@@ -23,6 +24,26 @@ namespace VoiceCommander.UI
         public ListView()
         {
             InitializeComponent();
+        }
+
+        public void ManageFiles(object sender, KeyEventArgs e)
+        {
+            var vm = (sender as ListViewItem).Content as DirectoryItemViewModel;
+
+           switch(e.Key)
+            {
+                case Key.Enter:
+                    vm.EnterCommand.Execute(null);
+                    break;
+                case Key.Back:
+                    // Get the first item in the ListView
+                    var firstItem = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.First();
+
+                    // Only go back if we're not in the root
+                    if (firstItem.Name == "..")
+                        firstItem.EnterCommand.Execute(null);
+                    break;
+            }
         }
     }
 }

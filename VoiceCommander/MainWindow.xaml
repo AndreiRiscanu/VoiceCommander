@@ -10,41 +10,26 @@
                            MinHeight="200" MinWidth="400">
 
     <DockPanel Background="#E0C9AD">
-        <!-- Menu bar -->
+        
+        <!-- MenuBar and current path -->
         <DockPanel DockPanel.Dock="Top">
-            <Menu DockPanel.Dock="Top" Padding="1" Background="#E0C9AD">
-                <MenuItem Header="Menu">
-                    <MenuItem Header="1" />
-                    <MenuItem Header="2" />
-                    <MenuItem Header="3" />
-                </MenuItem>
 
-                <MenuItem Header="Options">
-                    <MenuItem Header="1" />
-                    <MenuItem Header="2" />
-                    <MenuItem Header="3" />
-                </MenuItem>
-
-                <MenuItem Header="Help">
-                    <MenuItem Header="1" />
-                    <MenuItem Header="2" />
-                    <MenuItem Header="3" />
-                </MenuItem>
-            </Menu>
+            <ui:MenuView DockPanel.Dock="Top"/>
             <TextBox DockPanel.Dock="Top"
                      Background="#eee"
                      Padding="5,1,5,1"
                      Margin="5,0,5,1"
                      IsReadOnly="True"
                      Text="{Binding Items[0].GetParent, Mode=OneWay}"/>
+
         </DockPanel>
-        
 
         <!-- Textbox used for user input -->
-        <TextBox Margin="5,1,5,5" Padding="2" Background="White" DockPanel.Dock="Bottom" MaxLength="298" />
-        
+        <ui:CommandLineView DockPanel.Dock="Bottom" />
+
         <!-- Panels with which the user will interact -->
         <Grid Margin="5,0,5,0">
+            
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="4" />

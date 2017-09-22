@@ -8,13 +8,18 @@
              xmlns:items="clr-namespace:VoiceCommander.ViewModels"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    
+
     <ListView ScrollViewer.HorizontalScrollBarVisibility="Hidden"
               VirtualizingPanel.IsVirtualizing="True"
               VirtualizingPanel.ScrollUnit="Item"
               Background="#fdfaf4"
               Name="filesView"
               ItemsSource="{Binding Items}">
+        <ListView.ItemContainerStyle>
+            <Style TargetType="ListViewItem">
+                <EventSetter Event="PreviewKeyDown" Handler="ManageFiles" />
+            </Style>
+        </ListView.ItemContainerStyle>
 
         <ListView.ItemTemplate>
             <DataTemplate>
@@ -41,10 +46,9 @@
                                FontSize="{Binding ActualHeight,
                                ElementName=itemType, Converter={x:Static converter:ImageSizeToFontSizeConverter.Instance}}"
                                Text="{Binding Name}" />
-
+                    
                     <!-- The command to enter a drive/folder is called from here -->
                     <Grid.InputBindings>
-                        <KeyBinding Key="Enter" Command="{Binding EnterCommand, Mode=TwoWay}" />
                         <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EnterCommand, Mode=TwoWay}" />
                     </Grid.InputBindings>
                         

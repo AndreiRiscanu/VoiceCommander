@@ -19,7 +19,7 @@ namespace VoiceCommander.ViewModels
         /// The absolute path to this item
         /// </summary>
         public string FullPath { get; set; }
-
+        
         /// <summary>
         /// The name of this discovery item
         /// </summary>

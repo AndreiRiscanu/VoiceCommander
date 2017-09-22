@@ -9,3 +9,4 @@ namespace VoiceCommander.ViewModels
         public event PropertyChangedEventHandler PropertyChanged = (sender, e) => { };
     }
 }
+ 
