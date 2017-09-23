@@ -6,11 +6,12 @@
              xmlns:local="clr-namespace:VoiceCommander.UI"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
-    <TextBox>
-        <TextBox.VerticalScrollBarVisibility>Auto</TextBox.VerticalScrollBarVisibility>
-        <TextBox.IsReadOnly>True</TextBox.IsReadOnly>
-        <TextBox.AcceptsReturn>True</TextBox.AcceptsReturn>
-        <TextBox.TextWrapping>Wrap</TextBox.TextWrapping>
-        <TextBox.Background>#fdfaf4</TextBox.Background>
-    </TextBox>
+    
+    <TextBox VerticalScrollBarVisibility="Auto"
+             IsReadOnly="True"
+             AcceptsReturn="True"
+             TextWrapping="Wrap"
+             Background="#fdfaf4"
+             Text="{Binding output, Mode=TwoWay}" />
+
 </UserControl>

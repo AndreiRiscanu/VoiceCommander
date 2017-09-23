@@ -8,10 +8,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using VoiceCommander.ViewModels;
 
 namespace VoiceCommander.UI
@@ -35,6 +31,7 @@ namespace VoiceCommander.UI
                 case Key.Enter:
                     vm.EnterCommand.Execute(null);
                     break;
+
                 case Key.Back:
                     // Get the first item in the ListView
                     var firstItem = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.First();

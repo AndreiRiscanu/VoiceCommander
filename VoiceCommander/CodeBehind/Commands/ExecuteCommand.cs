@@ -1,6 +1,7 @@
 ﻿using System;
-using System.Windows;
+using System.Linq;
 using System.Windows.Input;
+using VoiceCommander.CommandLine;
 
 namespace VoiceCommander.Commands
 {
@@ -11,7 +12,7 @@ namespace VoiceCommander.Commands
         /// <summary>
         /// The action to run
         /// </summary>
-        private Action mAction;
+        private Action<string> mAction;
 
         #endregion
 
@@ -26,7 +27,7 @@ namespace VoiceCommander.Commands
 
         #region Constructor
 
-        public ExecuteCommand(Action action)
+        public ExecuteCommand(Action<string> action)
         {
             mAction = action;
         }
@@ -51,7 +52,7 @@ namespace VoiceCommander.Commands
         /// <param name="parameter"></param>
         public void Execute(object parameter)
         {
-            mAction();
+            mAction(parameter as string);
         }
 
         #endregion

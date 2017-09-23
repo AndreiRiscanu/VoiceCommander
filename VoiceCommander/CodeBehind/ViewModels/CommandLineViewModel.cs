@@ -1,5 +1,7 @@
-﻿using System.Windows;
+﻿using System;
+using System.Linq;
 using System.Windows.Input;
+using VoiceCommander.CommandLine;
 using VoiceCommander.Commands;
 
 namespace VoiceCommander.ViewModels
@@ -13,9 +15,21 @@ namespace VoiceCommander.ViewModels
             this.ExecuteCommand = new ExecuteCommand(this.GetCommand);
         }
 
-        private void GetCommand()
+        private void GetCommand(string command)
         {
-            MessageBox.Show("works");
+            if (Command.GetCommand(command as string) != null)
+            {
+                string[] param = (command as string).Split(new Char[] { ' ' });
+
+                if (param.Length > 1)
+                {
+                    Command.Execute(param[0], param.Skip(1).ToArray());
+
+                    return;
+                }
+
+                Command.Execute(command, null);
+            }
         }
     }
 }

@@ -61,6 +61,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CodeBehind\CommandLine\Command.cs" />
+    <Compile Include="CodeBehind\CommandLine\LineCommands.cs" />
+    <Compile Include="CodeBehind\CommandLine\Register.cs" />
     <Compile Include="CodeBehind\Commands\ExecuteCommand.cs" />
     <Compile Include="CodeBehind\Converters\GridWidthToListViewWidthConverter.cs" />
     <Compile Include="CodeBehind\Converters\ImageSizeToFontSizeConverter.cs" />
@@ -73,6 +76,7 @@
     <Compile Include="CodeBehind\ViewModels\DirectoryItemViewModel.cs" />
     <Compile Include="CodeBehind\ViewModels\DirectoryStructureViewModel.cs" />
     <Compile Include="CodeBehind\Commands\RelayCommand.cs" />
+    <Compile Include="CodeBehind\ViewModels\OutputStringItemViewModel.cs" />
     <Compile Include="UI\CommandLineView.xaml.cs">
       <DependentUpon>CommandLineView.xaml</DependentUpon>
     </Compile>
