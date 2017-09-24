@@ -11,6 +11,7 @@
              IsReadOnly="True"
              AcceptsReturn="True"
              TextWrapping="Wrap"
+             FontSize="{Binding fontSize}"
              Background="#fdfaf4"
              Text="{Binding output, Mode=TwoWay}" />
 

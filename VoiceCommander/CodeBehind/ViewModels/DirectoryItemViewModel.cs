@@ -93,15 +93,7 @@ namespace VoiceCommander.ViewModels
                 // Else, we need to populate with the users drives
                 else
                 {
-                    // Remove the current items shown
-                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Clear();
-
-                    var drives = DirectoryStructure.GetLogicalDrives();
-
-                    foreach (var child in drives.Select(drive => new DirectoryItemViewModel(drive.FullPath, DirectoryItemType.Drive)))
-                    {
-                        DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(child);
-                    }
+                    DirectoryStructureViewModel.GetDirectoryStructureInstance().PopulateWithDrives();
 
                     return;
                 }

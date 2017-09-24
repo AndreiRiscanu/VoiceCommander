@@ -19,6 +19,16 @@ namespace VoiceCommander.ViewModels
             return DirectoryStructureInstance;
         }
 
+        /// <summary>
+        /// Populate the ListView with the user's drives
+        /// </summary>
+        public void PopulateWithDrives()
+        {
+            var children = DirectoryStructure.GetLogicalDrives();
+
+            Items = new ObservableCollection<DirectoryItemViewModel>(children.Select(drive => new DirectoryItemViewModel(drive.FullPath, DirectoryItemType.Drive)));
+        }
+
         #endregion
 
         #region Private
@@ -34,9 +44,7 @@ namespace VoiceCommander.ViewModels
         /// </summary>
         private DirectoryStructureViewModel()
         {
-            var children = DirectoryStructure.GetLogicalDrives();
-
-            Items = new ObservableCollection<DirectoryItemViewModel>(children.Select(drive => new DirectoryItemViewModel(drive.FullPath, DirectoryItemType.Drive)));
+            PopulateWithDrives();
         }
 
         #endregion
