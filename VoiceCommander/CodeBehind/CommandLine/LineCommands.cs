@@ -37,14 +37,14 @@ namespace VoiceCommander.CommandLine
         }
 
         /// <summary>
-        /// Show details about a select file or folder
+        /// Show details about a selected file or folder
         /// </summary>
         /// <param name="parameters"></param>
         public static void ShowItemDetails(string[] parameters)
         {
             if (parameters != null)
             {
-                if (Directory.Exists(parameters[0]))
+                if (Directory.Exists(@parameters[0]))
                 {
                     var item = new DirectoryInfo(@parameters[0]);
 
@@ -105,18 +105,49 @@ namespace VoiceCommander.CommandLine
             if (parameters == null)
                 return;
 
-            if (Directory.Exists(@parameters[0]))
+            // Go back
+            if (parameters[0] == "..")
             {
-                var items = DirectoryStructure.GetDirectoryContents(@parameters[0]);
-                
-                DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Clear();
-
-                DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(new DirectoryItemViewModel(@parameters[0], Data.DirectoryItemType.Folder));
-
-                foreach (var item in items)
+                if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].Name == "..")
                 {
-                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(new DirectoryItemViewModel(item.FullPath, item.Type));
+                    var parentPath = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].EnterCommand;
+
+                    parentPath.Execute(null);
                 }
+            }
+            else
+                // If the directory exists, get it's items and populate the view
+                if (Directory.Exists(@parameters[0]))
+                {
+                    var items = DirectoryStructure.GetDirectoryContents(@parameters[0]);
+
+                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Clear();
+
+                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(new DirectoryItemViewModel(@parameters[0], Data.DirectoryItemType.Folder));
+
+                    foreach (var item in items)
+                    {
+                        DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(new DirectoryItemViewModel(item.FullPath, item.Type));
+                    }
+                }
+        }
+
+        /// <summary>
+        /// Display the content of a file to the user
+        /// </summary>
+        /// <param name="parameters"></param>
+        public static void ReadContent(string[] parameters) 
+        {
+            if (File.Exists(@parameters[0]))
+            {
+                // Get the size of the file in bytes
+                Int64 fileSize = new FileInfo(@parameters[0]).Length;
+
+                // Don't open files too big, might be a picture or a movie
+                if (fileSize < 500000)
+                    OutputStringItemViewModel.GetOutputStringInstance().output = File.ReadAllText(@parameters[0], System.Text.Encoding.UTF8);
+                else
+                    OutputStringItemViewModel.GetOutputStringInstance().output = "Could not read: File size too big.";
             }
         }
     }

@@ -9,6 +9,7 @@
             Command.Register("info", LineCommands.ShowItemDetails);
             Command.Register("fontsize", LineCommands.ChangeFontSize);
             Command.Register("cd", LineCommands.ChangeLocation);
+            Command.Register("read", LineCommands.ReadContent);
         }
     }
 }
