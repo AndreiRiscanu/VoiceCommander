@@ -139,6 +139,11 @@ namespace VoiceCommander.CommandLine
         /// <param name="parameters"></param>
         public static void ReadContent(string[] parameters) 
         {
+            if (parameters == null)
+            {
+                return;
+            }
+
             if (File.Exists(@parameters[0]))
             {
                 // Get the size of the file in bytes

@@ -11,11 +11,14 @@
     <TextBox Margin="5,1,5,5"
              Name="commandLine"
              Padding="2" 
+             Text="{Binding currentCommand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
              Background="White" 
              MaxLength="300">
 
         <TextBox.InputBindings>
-            <KeyBinding Key="Enter" Command="{Binding ExecuteCommand}" CommandParameter="{Binding Text, ElementName=commandLine}" />
+            <KeyBinding Key="Enter" Command="{Binding ExecuteCommand}" />
+            <KeyBinding Key="Up" Command="{Binding ExecuteCommand}" CommandParameter="Up" />
+            <KeyBinding Key="Down" Command="{Binding ExecuteCommand}" CommandParameter="Down" />
         </TextBox.InputBindings>
     </TextBox>
 
