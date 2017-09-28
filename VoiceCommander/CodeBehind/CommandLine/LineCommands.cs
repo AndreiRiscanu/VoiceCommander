@@ -9,6 +9,7 @@ namespace VoiceCommander.CommandLine
 {
     public abstract class LineCommands
     {
+        #region Public Methods
 
         /// <summary>
         /// Count the total number of elements in the current folder
@@ -116,21 +117,21 @@ namespace VoiceCommander.CommandLine
                     parentPath.Execute(null);
                 }
             }
+            // If the full path to the directory is given, get it's items and populate the view
+            else if (Directory.Exists(@parameters[0]))
+            {
+                PopulateGivenPath(@parameters[0]);
+            }
+            // Else, check if the path given is a continuation of the current path 
             else
-                // If the directory exists, get it's items and populate the view
-                if (Directory.Exists(@parameters[0]))
+            {
+                var path = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + "\\" + @parameters[0];
+
+                if (Directory.Exists(path))
                 {
-                    var items = DirectoryStructure.GetDirectoryContents(@parameters[0]);
-
-                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Clear();
-
-                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(new DirectoryItemViewModel(@parameters[0], Data.DirectoryItemType.Folder));
-
-                    foreach (var item in items)
-                    {
-                        DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(new DirectoryItemViewModel(item.FullPath, item.Type));
-                    }
+                    PopulateGivenPath(path);
                 }
+            }
         }
 
         /// <summary>
@@ -278,7 +279,165 @@ namespace VoiceCommander.CommandLine
             }
         }
 
+        /// <summary>
+        /// Create a folder with the specified name, at the specified path
+        /// </summary>
+        /// <param name="parameters"></param>
+        public static void CreateFolder(string[] parameters)
+        {
+            if (parameters == null)
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.NONAME;
+
+                return;
+            }
+
+            // Create the folder at the given path
+            if (parameters.Length > 1)
+            {
+                #region Path Given
+
+                if (StringContainsIllegalCharacters(parameters[1]))
+                {
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.ILLEGALCHARACTERS;
+
+                    return;
+                }
+
+                if (Directory.Exists(@parameters[0]))
+                    if (!Directory.Exists(@parameters[0] + '\\' + parameters[1]))
+                    {
+                        // Folder can be created
+                        Directory.CreateDirectory(@parameters[0] + '\\' + parameters[1]);
+
+                        OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATED;
+
+                        DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
+                    }
+                    else
+                        // A folder with this name already exists
+                        OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.EXISTSERROR;
+                else
+                    // Path given is inexistent
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.PATHERROR;
+
+                #endregion
+            }
+            else
+            {
+                #region Current folder
+
+                // We cannot create a folder if we are in the root
+                if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].Name != "..")
+                {
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.ROOT;
+
+                    return;
+                }
+
+                if (StringContainsIllegalCharacters(parameters[0]))
+                {
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.ILLEGALCHARACTERS;
+
+                    return;
+                }
+
+                if (!Directory.Exists(DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + parameters[0]))
+                {
+                    Directory.CreateDirectory(DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + parameters[0]);
+
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATED;
+
+                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
+                }
+                else
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.EXISTSERROR;
+
+                #endregion
+            }
+        }
+
+        /// <summary>
+        /// Delete a given folder from the specified path
+        /// </summary>
+        /// <param name="parameters"></param>
+        public static void DeleteFolder(string[] parameters)
+        {
+            if (parameters[0] == null)
+                return;
+
+            // Full path to the file was given
+            if (Directory.Exists(@parameters[0]))
+            {
+                if (parameters.Length > 1 && parameters[1] == "-r")
+                    Directory.Delete(@parameters[0], true);
+                else if (Directory.GetFiles(@parameters[0]).Length < 0)
+                    Directory.Delete(@parameters[0]);
+                else
+                {
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETIONERROR + OutputStrings.FOLDERNOTEMPTY;
+
+                    return;
+                }
+
+                OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETED;
+
+                DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
+            }
+            else
+            {
+                // We cannot delete a file if we are in the root
+                if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].Name != "..")
+                {
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETIONERROR + OutputStrings.ROOT;
+
+                    return;
+                }
+
+                var filePath = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + @parameters[0];
+
+                if (Directory.Exists(filePath))
+                {
+                    // Delete recursively
+                    if (parameters.Length > 1 && parameters[0] == "-r")
+                        Directory.Delete(filePath, true);
+                    // Delete empty folder
+                    else if (Directory.GetFiles(filePath).Length < 0)
+                        Directory.Delete(filePath);
+                    // Specified folder is not empty
+                    else
+                    {
+                        OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETIONERROR + OutputStrings.FOLDERNOTEMPTY;
+
+                        return;
+                    }
+                    
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETED;
+
+                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
+                }
+                else
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETIONERROR + OutputStrings.DOESNTEXISTERROR;
+            }
+        }
+
+        #endregion
+
         #region Private Methods
+
+        private static void PopulateGivenPath(string path)
+        {
+            var items = DirectoryStructure.GetDirectoryContents(path);
+
+            DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Clear();
+
+            DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(new DirectoryItemViewModel(path, Data.DirectoryItemType.Folder));
+
+            foreach (var item in items)
+            {
+                DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(new DirectoryItemViewModel(item.FullPath, item.Type));
+            }
+        }
 
         private static bool StringContainsIllegalCharacters(string sentence)
         {

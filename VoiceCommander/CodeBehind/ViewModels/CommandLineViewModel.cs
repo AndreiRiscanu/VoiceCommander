@@ -70,7 +70,7 @@ namespace VoiceCommander.ViewModels
             string[] param = currentCommand.Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             commandHistory.Add(currentCommand);
-
+            commandIndex = 0;
             currentCommand = "";
 
             // Save only the last 20 commands

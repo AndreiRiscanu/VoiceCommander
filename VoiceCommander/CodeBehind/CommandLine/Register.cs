@@ -12,6 +12,8 @@
             Command.Register("read", LineCommands.ReadContent);
             Command.Register("mkfile", LineCommands.CreateFile);
             Command.Register("rmfile", LineCommands.DeleteFile);
+            Command.Register("mkdir", LineCommands.CreateFolder);
+            Command.Register("rmdir", LineCommands.DeleteFolder);
         }
     }
 }

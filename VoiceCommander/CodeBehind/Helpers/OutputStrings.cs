@@ -19,5 +19,6 @@
         public static string PATHERROR = "incorrect path";
         public static string NONAME = "no name given";
         public static string ROOT = "root";
+        public static string FOLDERNOTEMPTY = "folder not empty; use \"-r\" to delete a folder and it's content";
     }
 }

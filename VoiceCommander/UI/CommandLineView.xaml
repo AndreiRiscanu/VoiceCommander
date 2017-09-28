@@ -9,7 +9,6 @@
              d:DesignHeight="300" d:DesignWidth="300">
 
     <TextBox Margin="5,1,5,5"
-             Name="commandLine"
              Padding="2" 
              Text="{Binding currentCommand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
              Background="White" 
