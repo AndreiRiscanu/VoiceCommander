@@ -2,6 +2,7 @@
 using System.IO;
 using System.Windows;
 using VoiceCommander.CodeBehind.ViewModels;
+using VoiceCommander.Helpers;
 using VoiceCommander.ViewModels;
 
 namespace VoiceCommander.CommandLine
@@ -150,5 +151,141 @@ namespace VoiceCommander.CommandLine
                     OutputStringItemViewModel.GetOutputStringInstance().output = "Could not read: File size too big.";
             }
         }
+
+        /// <summary>
+        /// Create a file with the specified name, at the specified path
+        /// </summary>
+        /// <param name="parameters"></param>
+        public static void CreateFile(string[] parameters)
+        {
+            if (parameters == null)
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.NONAME;
+
+                return;
+            }
+
+            // Create the file at the given path
+            if (parameters.Length > 1)
+            {
+                #region Path Given
+
+                if (StringContainsIllegalCharacters(parameters[1]))
+                {
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.ILLEGALCHARACTERS;
+
+                    return;
+                }
+
+                if (Directory.Exists(@parameters[0]))
+                    if (!File.Exists(@parameters[0] + '\\' + parameters[1]))
+                    {
+                        // File can be created
+                        File.Create(@parameters[0] + '\\' + parameters[1]);
+
+                        OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATED;
+
+                        DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
+                    }
+                    else
+                        // A file with this name already exists
+                        OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.EXISTSERROR;
+                else
+                    // Path given is inexistent
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.PATHERROR;
+
+            #endregion
+            }
+            else
+            {
+                #region Current folder
+
+                // We cannot create a file if we are in the root
+                if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].Name != "..")
+                {
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.ROOT;
+
+                    return;
+                }
+
+                if (StringContainsIllegalCharacters(parameters[0]))
+                {
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.ILLEGALCHARACTERS;
+
+                    return;
+                }
+
+                if (!File.Exists(DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + parameters[0]))
+                {
+                    File.Create(DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + parameters[0]);
+
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATED;
+
+                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
+                }
+                else
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.EXISTSERROR;
+
+                #endregion
+            }
+        }
+
+        /// <summary>
+        /// Delete a given file from the specified path
+        /// </summary>
+        /// <param name="parameters"></param>
+        public static void DeleteFile(string[] parameters)
+        {
+            if (parameters[0] == null)
+                return;
+
+            // Full path to the file was given
+            if (File.Exists(@parameters[0]))
+            {
+                File.Delete(@parameters[0]);
+
+                OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILEDELETED;
+
+                DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
+            }
+            else
+            {
+                // We cannot delete a file if we are in the root
+                if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].Name != "..")
+                {
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILEDELETIONERROR + OutputStrings.ROOT;
+
+                    return;
+                }
+
+                var filePath = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent;
+
+                if (File.Exists(filePath + '\\' + parameters[0]))
+                {
+                    File.Delete(filePath + '\\' + parameters[0]);
+
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILEDELETED;
+
+                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
+                }
+                else
+                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILEDELETIONERROR + OutputStrings.DOESNTEXISTERROR;
+            }
+        }
+
+        #region Private Methods
+
+        private static bool StringContainsIllegalCharacters(string sentence)
+        {
+            foreach (char c in sentence)
+            {
+                if (c == '\\' || c == '/')
+                    return true;
+            }
+
+            return false;
+        }
+
+        #endregion
     }
 }

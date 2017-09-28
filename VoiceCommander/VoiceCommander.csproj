@@ -71,6 +71,7 @@
     <Compile Include="CodeBehind\Data\DirectoryItem.cs" />
     <Compile Include="CodeBehind\Data\DirectoryItemType.cs" />
     <Compile Include="CodeBehind\Converters\HeaderToImageConverter.cs" />
+    <Compile Include="CodeBehind\Helpers\OutputStrings.cs" />
     <Compile Include="CodeBehind\ViewModels\BaseViewModel.cs" />
     <Compile Include="CodeBehind\ViewModels\CommandLineViewModel.cs" />
     <Compile Include="CodeBehind\ViewModels\DirectoryItemViewModel.cs" />

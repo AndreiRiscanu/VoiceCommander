@@ -52,7 +52,7 @@ namespace VoiceCommander.ViewModels
                 return null;
             }
         }
-
+        
         #endregion
 
         #region Constructor

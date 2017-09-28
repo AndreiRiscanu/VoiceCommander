@@ -29,6 +29,30 @@ namespace VoiceCommander.ViewModels
             Items = new ObservableCollection<DirectoryItemViewModel>(children.Select(drive => new DirectoryItemViewModel(drive.FullPath, DirectoryItemType.Drive)));
         }
 
+        /// <summary>
+        /// Refresh the view
+        /// </summary>
+        public void Refresh()
+        {
+            if (Items[0].Name == "..")
+            {
+                var first = Items[0];
+
+                Items.Clear();
+
+                // We need to add the Go Back ("..") item first
+                DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(first);
+
+                var children = DirectoryStructure.GetDirectoryContents(Items[0].GetParent);
+
+                // Populate the View with the folder's content
+                foreach (var child in children.Select(content => new DirectoryItemViewModel(content.FullPath, content.Type)))
+                {
+                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(child);
+                }
+            }
+        }
+
         #endregion
 
         #region Private

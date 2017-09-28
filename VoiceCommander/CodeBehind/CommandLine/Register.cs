@@ -10,6 +10,8 @@
             Command.Register("fontsize", LineCommands.ChangeFontSize);
             Command.Register("cd", LineCommands.ChangeLocation);
             Command.Register("read", LineCommands.ReadContent);
+            Command.Register("mkfile", LineCommands.CreateFile);
+            Command.Register("rmfile", LineCommands.DeleteFile);
         }
     }
 }
