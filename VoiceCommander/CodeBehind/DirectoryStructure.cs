@@ -7,6 +7,8 @@ namespace VoiceCommander
 {
     public static class DirectoryStructure
     {
+        public static int numberOfItems = 0;
+
         /// <summary>
         /// Gets all logical drives on the computer
         /// </summary>

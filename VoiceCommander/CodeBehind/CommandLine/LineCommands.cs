@@ -399,7 +399,7 @@ namespace VoiceCommander.CommandLine
                 if (Directory.Exists(filePath))
                 {
                     // Delete recursively
-                    if (parameters.Length > 1 && parameters[0] == "-r")
+                    if (parameters.Length > 1 && parameters[1] == "-r")
                         Directory.Delete(filePath, true);
                     // Delete empty folder
                     else if (Directory.GetFiles(filePath).Length < 0)

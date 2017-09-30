@@ -34,6 +34,8 @@ namespace VoiceCommander.ViewModels
             }
         }
         
+        public int itemIndex { get; set; }
+
         public ICommand EnterCommand { get; set; }
 
         /// <summary>
@@ -63,6 +65,8 @@ namespace VoiceCommander.ViewModels
 
             this.FullPath = fullPath;
             this.Type = type;
+
+            itemIndex = DirectoryStructure.numberOfItems++;
         }
 
         #endregion
@@ -83,6 +87,8 @@ namespace VoiceCommander.ViewModels
             parentInfo = parentInfo.Parent;
 
             #region Go Back
+
+            DirectoryStructure.numberOfItems = 0;
 
             // If the user double-clicks the "go back" item...
             if (this.Name == "..")

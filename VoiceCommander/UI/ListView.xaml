@@ -29,19 +29,35 @@
                       Background="Transparent">
                     
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="0.1*" MinWidth="30" MaxWidth="60" />
                         <ColumnDefinition Width="0.07*" MinWidth="25" MaxWidth="40" />
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
+                    <!-- Item number -->
+                    <Border Margin="2" 
+                            Padding="2" 
+                            BorderThickness="1" 
+                            BorderBrush="MintCream" 
+                            Background="BlanchedAlmond"
+                            CornerRadius="7"
+                            VerticalAlignment="Center"
+                            Height="{Binding ActualHeight, ElementName=itemType}">
+                        <TextBlock Text="{Binding itemIndex}"
+                                   VerticalAlignment="Center"
+                                   HorizontalAlignment="Center"
+                                   TextWrapping="WrapWithOverflow"/>
+                    </Border>
+
                     <!-- Drive, file or folder -->
-                    <Image Grid.Column="0"
+                    <Image Grid.Column="1"
                            Margin="0,0,5,0"
                            Name="itemType"
                            Source="{Binding Type,
                            Converter={x:Static converter:HeaderToImageConverter.Instance}}" />
 
                     <!-- The text is binded to the image size, so they'll expand/shrink together -->
-                    <TextBlock Grid.Column="1"
+                    <TextBlock Grid.Column="2"
                                VerticalAlignment="Center"
                                FontSize="{Binding ActualHeight,
                                ElementName=itemType, Converter={x:Static converter:ImageSizeToFontSizeConverter.Instance}}"

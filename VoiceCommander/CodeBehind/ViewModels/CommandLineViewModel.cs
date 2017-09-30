@@ -12,7 +12,7 @@ namespace VoiceCommander.ViewModels
         public ICommand ExecuteCommand { get; set; }
 
         public string currentCommand { get; set; } = "";
-
+        
         public CommandLineViewModel()
         {
             this.ExecuteCommand = new ExecuteCommand(this.GetCommand);
@@ -94,6 +94,8 @@ namespace VoiceCommander.ViewModels
                 // Else, execute the command alone
                 Command.Execute(param[0], null);
             }
+            else
+                CodeBehind.ViewModels.OutputStringItemViewModel.GetOutputStringInstance().output = "Invalid Command";
         }
     }
 }
