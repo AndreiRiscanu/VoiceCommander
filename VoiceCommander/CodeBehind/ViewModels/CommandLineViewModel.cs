@@ -108,7 +108,7 @@ namespace VoiceCommander.ViewModels
         {
             var numberOfDigitsInItemsLength = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Count.ToString().Length;
 
-            if (path.ElementAt(0) == '\\' && path.Length <= numberOfDigitsInItemsLength + 1)
+            if (path.ElementAt(0) == '\\' && path.Length > 1 && path.Length <= numberOfDigitsInItemsLength + 1)
             {
                 var itemNumber = path.Substring(1);
 

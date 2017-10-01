@@ -437,10 +437,76 @@ namespace VoiceCommander.CommandLine
             }
         }
 
+        /// <summary>
+        /// Rename a given file
+        /// </summary>
+        /// <param name="parameters"></param>
+        public static void MoveFile(string[] parameters)
+        {
+            if (parameters.Length < 2)
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().output = "Not enough arguments given; should be: <old_file_name> <new_file_name>";
+
+                return;
+            }
+
+            var newPath = parameters[1];
+
+            // The second argument shouldn't end with a '\' because it would mean that a path with no file name to be created was given
+            if (newPath.EndsWith("\\"))
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().output = "No file name given";
+
+                return;
+            }
+
+            // Check if the path given as new is valid
+            if (!Directory.Exists(Path.GetDirectoryName(newPath)))
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().output = "The new path given is not valid";
+
+                return;
+            }
+
+            // The new file name can't match an existing file or folder name
+            if (File.Exists(newPath) || Directory.Exists(newPath))
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().output = "There already exists a file/folder with that name";
+
+                return;
+            }
+
+            if (!FileMoved(parameters[0], newPath))
+            {
+                var path = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + parameters[0];
+
+                // Only if the first argument is an existent file
+                if (!FileMoved(path, newPath))
+                    OutputStringItemViewModel.GetOutputStringInstance().output = "File to be moved or new path given is invalid";
+            }
+        }
+
         #endregion
 
 
         #region Private Methods
+
+        private static bool FileMoved(string path, string newPath)
+        {
+            if (File.Exists(path))
+            {
+                // File can be moved safely
+                File.Move(path, newPath);
+
+                OutputStringItemViewModel.GetOutputStringInstance().output = "File moved";
+
+                DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
+
+                return true;
+            }
+
+            return false;
+        }
 
         private static bool GetInfo(string path)
         {
