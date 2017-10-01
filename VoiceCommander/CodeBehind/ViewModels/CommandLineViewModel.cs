@@ -70,6 +70,13 @@ namespace VoiceCommander.ViewModels
 
             #endregion
 
+            if (parameter == "Paste")
+            {
+                currentCommand += DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent;
+
+                return;
+            }
+
             if (currentCommand == null || currentCommand == "")
                 return;
             

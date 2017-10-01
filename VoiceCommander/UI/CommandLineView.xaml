@@ -12,13 +12,13 @@
              Margin="5,1,5,5"
              MaxLength="300"
              Padding="2" 
-             KeyDown="PastePath"
              Text="{Binding currentCommand, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}">
         
         <TextBox.InputBindings>
             <KeyBinding Key="Enter" Command="{Binding ExecuteCommand}" />
             <KeyBinding Key="Up" Command="{Binding ExecuteCommand}" CommandParameter="Up" />
             <KeyBinding Key="Down" Command="{Binding ExecuteCommand}" CommandParameter="Down" />
+            <KeyBinding Key="F" Modifiers="Ctrl" Command="{Binding ExecuteCommand}" CommandParameter="Paste" />
         </TextBox.InputBindings>
     </TextBox>
 
