@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Input;
+using VoiceCommander.CodeBehind.ViewModels;
 using VoiceCommander.CommandLine;
 using VoiceCommander.Commands;
 
@@ -9,6 +10,8 @@ namespace VoiceCommander.ViewModels
 {
     class CommandLineViewModel : BaseViewModel
     {
+        #region Public Members
+
         public ICommand ExecuteCommand { get; set; }
 
         public string currentCommand { get; set; } = "";
@@ -19,6 +22,10 @@ namespace VoiceCommander.ViewModels
 
             commandHistory = new List<string>();
         }
+
+        #endregion Public Members
+
+        #region Private Members
 
         private List<string> commandHistory { get; set; }
 
@@ -85,6 +92,8 @@ namespace VoiceCommander.ViewModels
                 // And at least one parameter was given
                 if (param.Length > 1)
                 {
+                    param[1] = ConvertToPath(param[1]);
+
                     // Execute the command with the given parameters
                     Command.Execute(param[0], param.Skip(1).ToArray());
 
@@ -97,5 +106,31 @@ namespace VoiceCommander.ViewModels
             else
                 CodeBehind.ViewModels.OutputStringItemViewModel.GetOutputStringInstance().output = "Invalid Command";
         }
+
+        private string ConvertToPath(string path)
+        {
+            var numberOfDigitsInItemsLength = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Count.ToString().Length;
+
+            if (path.ElementAt(0) == '&' && path.Length <= numberOfDigitsInItemsLength + 1)
+            {
+                var itemNumber = path.Substring(1);
+
+                // Check if there are only numbers in the given size
+                foreach (char c in itemNumber)
+                {
+                    if (c < '0' || c > '9')
+                        return path;
+                }
+
+                var element = Int32.Parse(itemNumber);
+
+                // Get the element at the specified position
+                return DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[element].FullPath;
+            }
+
+            return path;
+        }
+
+        #endregion
     }
 }

@@ -34,6 +34,9 @@ namespace VoiceCommander.ViewModels
             }
         }
         
+        /// <summary>
+        /// The number to show on the left side of the item
+        /// </summary>
         public int itemIndex { get; set; }
 
         public ICommand EnterCommand { get; set; }

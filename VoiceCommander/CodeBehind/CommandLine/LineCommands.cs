@@ -19,6 +19,7 @@ namespace VoiceCommander.CommandLine
         {
             var items = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items;
 
+            // The parent directory isn't taken into account
             if (items[0].Name == "..")
             {
                 OutputStringItemViewModel.GetOutputStringInstance().output = (items.Count - 1).ToString();
@@ -46,19 +47,12 @@ namespace VoiceCommander.CommandLine
         {
             if (parameters != null)
             {
-                if (Directory.Exists(@parameters[0]))
-                {
-                    var item = new DirectoryInfo(@parameters[0]);
+                if (GetInfo(@parameters[0]))
+                    return;
 
-                    OutputStringItemViewModel.GetOutputStringInstance().output = item.Attributes.ToString() + "\nName: " + item.Name + "\nLast access time: " + item.LastAccessTime;
-                }
-                else if (File.Exists(parameters[0]))
-                {
-                    var item = new FileInfo(@parameters[0]);
-
-                    OutputStringItemViewModel.GetOutputStringInstance().output = item.Attributes.ToString() + "\nName: " + item.Name + "\nLast access time: " + item.LastAccessTime + "\nSize: " + item.Length;
-                }
+                GetInfo(DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + @parameters[0]);
             }
+            // Show info about the parent directory, if we're not in the root
             else
             {
                 if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].Name != "..")
@@ -120,6 +114,8 @@ namespace VoiceCommander.CommandLine
             // If the full path to the directory is given, get it's items and populate the view
             else if (Directory.Exists(@parameters[0]))
             {
+                DirectoryStructure.numberOfItems = 0;
+
                 PopulateGivenPath(@parameters[0]);
             }
             // Else, check if the path given is a continuation of the current path 
@@ -129,6 +125,8 @@ namespace VoiceCommander.CommandLine
 
                 if (Directory.Exists(path))
                 {
+                    DirectoryStructure.numberOfItems = 0;
+
                     PopulateGivenPath(path);
                 }
             }
@@ -145,16 +143,15 @@ namespace VoiceCommander.CommandLine
                 return;
             }
 
+            // Check if the full path to the file was given
             if (File.Exists(@parameters[0]))
             {
-                // Get the size of the file in bytes
-                Int64 fileSize = new FileInfo(@parameters[0]).Length;
-
-                // Don't open files too big, might be a picture or a movie
-                if (fileSize < 500000)
-                    OutputStringItemViewModel.GetOutputStringInstance().output = File.ReadAllText(@parameters[0], System.Text.Encoding.UTF8);
-                else
-                    OutputStringItemViewModel.GetOutputStringInstance().output = "Could not read: File size too big.";
+                ReadFileContent(@parameters[0]);
+            }
+            // Else, check if the file cand be found in the current folder
+            else if (File.Exists(DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + parameters[0]))
+            {
+                ReadFileContent(DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + parameters[0]);
             }
         }
 
@@ -164,6 +161,7 @@ namespace VoiceCommander.CommandLine
         /// <param name="parameters"></param>
         public static void CreateFile(string[] parameters)
         {
+            // No file name given
             if (parameters == null)
             {
                 OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.NONAME;
@@ -176,6 +174,7 @@ namespace VoiceCommander.CommandLine
             {
                 #region Path Given
 
+                // The name given contains illegal characters
                 if (StringContainsIllegalCharacters(parameters[1]))
                 {
                     OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.ILLEGALCHARACTERS;
@@ -214,6 +213,7 @@ namespace VoiceCommander.CommandLine
                     return;
                 }
 
+                // The name given contains illegal characters
                 if (StringContainsIllegalCharacters(parameters[0]))
                 {
                     OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.ILLEGALCHARACTERS;
@@ -248,14 +248,20 @@ namespace VoiceCommander.CommandLine
             // Full path to the file was given
             if (File.Exists(@parameters[0]))
             {
+                #region Path Given
+
                 File.Delete(@parameters[0]);
 
                 OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILEDELETED;
 
                 DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
+
+                #endregion
             }
             else
             {
+                #region Current Folder
+
                 // We cannot delete a file if we are in the root
                 if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].Name != "..")
                 {
@@ -264,11 +270,11 @@ namespace VoiceCommander.CommandLine
                     return;
                 }
 
-                var filePath = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent;
+                var filePath = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + parameters[0];
 
-                if (File.Exists(filePath + '\\' + parameters[0]))
+                if (File.Exists(filePath))
                 {
-                    File.Delete(filePath + '\\' + parameters[0]);
+                    File.Delete(filePath);
 
                     OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILEDELETED;
 
@@ -276,6 +282,8 @@ namespace VoiceCommander.CommandLine
                 }
                 else
                     OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILEDELETIONERROR + OutputStrings.DOESNTEXISTERROR;
+
+                #endregion
             }
         }
 
@@ -325,7 +333,7 @@ namespace VoiceCommander.CommandLine
             }
             else
             {
-                #region Current folder
+                #region Current Folder
 
                 // We cannot create a folder if we are in the root
                 if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].Name != "..")
@@ -369,6 +377,8 @@ namespace VoiceCommander.CommandLine
             // Full path to the file was given
             if (Directory.Exists(@parameters[0]))
             {
+                #region Path Given
+
                 if (parameters.Length > 1 && parameters[1] == "-r")
                     Directory.Delete(@parameters[0], true);
                 else if (Directory.GetFiles(@parameters[0]).Length < 0)
@@ -383,9 +393,13 @@ namespace VoiceCommander.CommandLine
                 OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETED;
 
                 DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
+
+                #endregion
             }
             else
             {
+                #region Current Folder
+
                 // We cannot delete a file if we are in the root
                 if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].Name != "..")
                 {
@@ -418,12 +432,51 @@ namespace VoiceCommander.CommandLine
                 }
                 else
                     OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETIONERROR + OutputStrings.DOESNTEXISTERROR;
+
+                #endregion
             }
         }
 
         #endregion
 
+
         #region Private Methods
+
+        private static bool GetInfo(string path)
+        {
+            // Check if the directory exists and show its info
+            if (Directory.Exists(path))
+            {
+                var item = new DirectoryInfo(path);
+
+                OutputStringItemViewModel.GetOutputStringInstance().output = item.Attributes.ToString() + "\nName: " + item.Name + "\nLast access time: " + item.LastAccessTime;
+
+                return true;
+            }
+            // Else, check if the file exists and show its info
+            else if (File.Exists(path))
+            {
+                var item = new FileInfo(path);
+
+                OutputStringItemViewModel.GetOutputStringInstance().output = item.Attributes.ToString() + "\nName: " + item.Name + "\nLast access time: " + item.LastAccessTime + "\nSize: " + item.Length;
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private static void ReadFileContent(string path)
+        {
+            // Get the size of the file in bytes
+            Int64 fileSize = new FileInfo(path).Length;
+
+            // Don't open files too big, might be a picture or a movie
+            if (fileSize < 500000)
+                OutputStringItemViewModel.GetOutputStringInstance().output = File.ReadAllText(path, System.Text.Encoding.UTF8);
+            else
+                OutputStringItemViewModel.GetOutputStringInstance().output = "Could not read: File size too big.";
+        }
 
         private static void PopulateGivenPath(string path)
         {
