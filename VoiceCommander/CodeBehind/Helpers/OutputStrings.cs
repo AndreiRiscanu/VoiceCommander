@@ -6,7 +6,7 @@
         public static string FOLDERCREATIONERROR = "Could not create folder: ";
 
         public static string FILEDELETIONERROR = "Could not delete file: ";
-        public static string FOLDERDELETIONERROR = "Could not delete fodler: ";
+        public static string FOLDERDELETIONERROR = "Could not delete folder: ";
 
         public static string FILECREATED = "File created";
         public static string FOLDERCREATED = "Folder created";

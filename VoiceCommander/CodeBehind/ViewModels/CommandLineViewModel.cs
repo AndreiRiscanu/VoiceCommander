@@ -89,11 +89,15 @@ namespace VoiceCommander.ViewModels
                     // Execute the command with the given parameters
                     Command.Execute(param[0], param.Skip(1).ToArray());
 
+                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
+
                     return;
                 }
 
                 // Else, execute the command alone
                 Command.Execute(param[0], null);
+
+                DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
             }
             else
                 CodeBehind.ViewModels.OutputStringItemViewModel.GetOutputStringInstance().output = "Invalid Command";

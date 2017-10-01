@@ -189,8 +189,6 @@ namespace VoiceCommander.CommandLine
                         File.Create(@parameters[0] + '\\' + parameters[1]);
 
                         OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATED;
-
-                        DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
                     }
                     else
                         // A file with this name already exists
@@ -226,8 +224,6 @@ namespace VoiceCommander.CommandLine
                     File.Create(DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + parameters[0]);
 
                     OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATED;
-
-                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
                 }
                 else
                     OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.EXISTSERROR;
@@ -254,8 +250,6 @@ namespace VoiceCommander.CommandLine
 
                 OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILEDELETED;
 
-                DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
-
                 #endregion
             }
             else
@@ -277,8 +271,6 @@ namespace VoiceCommander.CommandLine
                     File.Delete(filePath);
 
                     OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILEDELETED;
-
-                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
                 }
                 else
                     OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILEDELETIONERROR + OutputStrings.DOESNTEXISTERROR;
@@ -319,8 +311,6 @@ namespace VoiceCommander.CommandLine
                         Directory.CreateDirectory(@parameters[0] + '\\' + parameters[1]);
 
                         OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATED;
-
-                        DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
                     }
                     else
                         // A folder with this name already exists
@@ -355,8 +345,6 @@ namespace VoiceCommander.CommandLine
                     Directory.CreateDirectory(DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + parameters[0]);
 
                     OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATED;
-
-                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
                 }
                 else
                     OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.EXISTSERROR;
@@ -381,7 +369,7 @@ namespace VoiceCommander.CommandLine
 
                 if (parameters.Length > 1 && parameters[1] == "-r")
                     Directory.Delete(@parameters[0], true);
-                else if (Directory.GetFiles(@parameters[0]).Length < 0)
+                else if (Directory.GetFiles(@parameters[0]).Length == 0)
                     Directory.Delete(@parameters[0]);
                 else
                 {
@@ -391,8 +379,6 @@ namespace VoiceCommander.CommandLine
                 }
 
                 OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETED;
-
-                DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
 
                 #endregion
             }
@@ -416,7 +402,7 @@ namespace VoiceCommander.CommandLine
                     if (parameters.Length > 1 && parameters[1] == "-r")
                         Directory.Delete(filePath, true);
                     // Delete empty folder
-                    else if (Directory.GetFiles(filePath).Length < 0)
+                    else if (Directory.GetFiles(filePath).Length == 0)
                         Directory.Delete(filePath);
                     // Specified folder is not empty
                     else
@@ -427,8 +413,6 @@ namespace VoiceCommander.CommandLine
                     }
                     
                     OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETED;
-
-                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
                 }
                 else
                     OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETIONERROR + OutputStrings.DOESNTEXISTERROR;
@@ -499,8 +483,6 @@ namespace VoiceCommander.CommandLine
                 File.Move(path, newPath);
 
                 OutputStringItemViewModel.GetOutputStringInstance().output = "File moved";
-
-                DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
 
                 return true;
             }
