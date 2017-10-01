@@ -76,15 +76,7 @@ namespace VoiceCommander.ViewModels
             // Split the command from the arguments, removing any white spaces
             string[] param = currentCommand.Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
-            commandHistory.Add(currentCommand);
-            commandIndex = 0;
-            currentCommand = "";
-
-            // Save only the last 20 commands
-            if (commandHistory.Count > 20)
-            {
-                commandHistory.RemoveAt(0);
-            }
+            ManageCommands();
 
             // If the command exists in the Dictionary
             if (Command.GetCommand(param[0] as string) != null)
@@ -107,11 +99,16 @@ namespace VoiceCommander.ViewModels
                 CodeBehind.ViewModels.OutputStringItemViewModel.GetOutputStringInstance().output = "Invalid Command";
         }
 
+        /// <summary>
+        /// Convert the number given as parameter to the path of the item at that position, or return the path unchanged
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         private string ConvertToPath(string path)
         {
             var numberOfDigitsInItemsLength = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Count.ToString().Length;
 
-            if (path.ElementAt(0) == '&' && path.Length <= numberOfDigitsInItemsLength + 1)
+            if (path.ElementAt(0) == '\\' && path.Length <= numberOfDigitsInItemsLength + 1)
             {
                 var itemNumber = path.Substring(1);
 
@@ -125,10 +122,27 @@ namespace VoiceCommander.ViewModels
                 var element = Int32.Parse(itemNumber);
 
                 // Get the element at the specified position
-                return DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[element].FullPath;
+                if (element < DirectoryStructure.numberOfItems)
+                    return DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[element].FullPath;
             }
 
             return path;
+        }
+
+        /// <summary>
+        /// Add the new command to the history of commands
+        /// </summary>
+        private void ManageCommands()
+        {
+            commandHistory.Add(currentCommand);
+            commandIndex = 0;
+            currentCommand = "";
+
+            // Save only the last 20 commands
+            if (commandHistory.Count > 20)
+            {
+                commandHistory.RemoveAt(0);
+            }
         }
 
         #endregion

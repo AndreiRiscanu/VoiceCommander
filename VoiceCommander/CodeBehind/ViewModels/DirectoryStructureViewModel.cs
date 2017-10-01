@@ -40,6 +40,8 @@ namespace VoiceCommander.ViewModels
 
                 Items.Clear();
 
+                DirectoryStructure.numberOfItems = 1;
+
                 // We need to add the Go Back ("..") item first
                 DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(first);
 
