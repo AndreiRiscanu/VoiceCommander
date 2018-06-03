@@ -87,7 +87,7 @@ namespace VoiceCommander.CommandLine
                 var size = Int32.Parse(parameters[0]);
 
                 // Font size shouldn't be too small or too big
-                if (size > 9 && size < 101)
+                if (size >= 10 && size <= 100)
                     OutputStringItemViewModel.GetOutputStringInstance().fontSize = size;
             }
         }
@@ -467,6 +467,32 @@ namespace VoiceCommander.CommandLine
                 // Only if the first argument is an existent file
                 if (!FileMoved(path, newPath))
                     OutputStringItemViewModel.GetOutputStringInstance().output = "File to be moved or new path given is invalid";
+            }
+        }
+
+        /// <summary>
+        /// Find a file or folder by partially giving its name
+        /// </summary>
+        /// <param name="parameters"></param>
+        public static void FindFileOrFolder(string[] parameters)
+        {
+            if (parameters == null)
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().output = "No argument given";
+
+                return;
+            }
+
+            if (!parameters[0].Contains("\\"))
+            {
+                if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent == null)
+                {
+                    OutputStringItemViewModel.GetOutputStringInstance().output = "Please select a drive in which to search";
+
+                    return;
+                }
+
+                parameters[0].Insert(0, DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + "\\");
             }
         }
 

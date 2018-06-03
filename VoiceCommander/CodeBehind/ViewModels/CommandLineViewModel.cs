@@ -134,7 +134,7 @@ namespace VoiceCommander.ViewModels
 
                 // Get the element at the specified position
                 if (element < DirectoryStructure.numberOfItems)
-                    return DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[element].FullPath;
+                    return DirectoryStructure.getElementAtPosition(element);
             }
 
             return path;

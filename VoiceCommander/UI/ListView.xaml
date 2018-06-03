@@ -25,7 +25,8 @@
             <DataTemplate>
                 
                 <!-- The image and item name -->
-                <Grid Width="{Binding ActualWidth, ElementName=filesView, Converter={x:Static converter:GridWidthToListViewWidthConverter.Instance}}" 
+                <Grid Width="{Binding ActualWidth, ElementName=filesView,
+                      Converter={x:Static converter:GridWidthToListViewWidthConverter.Instance}}" 
                       Background="Transparent">
                     
                     <Grid.ColumnDefinitions>

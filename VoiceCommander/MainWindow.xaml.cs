@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using VoiceCommander.CodeBehind;
 using VoiceCommander.ViewModels;
 
 namespace VoiceCommander
@@ -11,6 +12,7 @@ namespace VoiceCommander
         public MainWindow()
         {
             InitializeComponent();
+            SpeechFunctionality.InitializeSpeechFunctionality();
 
             this.DataContext = DirectoryStructureViewModel.GetDirectoryStructureInstance();
         }

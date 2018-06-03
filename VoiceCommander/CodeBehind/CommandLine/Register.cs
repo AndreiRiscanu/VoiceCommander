@@ -15,6 +15,7 @@
             Command.Register("mkdir", LineCommands.CreateFolder);
             Command.Register("rmdir", LineCommands.DeleteFolder);
             Command.Register("mv", LineCommands.MoveFile);
+            Command.Register("find", LineCommands.FindFileOrFolder);
         }
     }
 }

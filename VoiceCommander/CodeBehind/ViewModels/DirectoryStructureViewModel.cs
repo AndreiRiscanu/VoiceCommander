@@ -43,14 +43,14 @@ namespace VoiceCommander.ViewModels
                 DirectoryStructure.numberOfItems = 1;
 
                 // We need to add the Go Back ("..") item first
-                DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(first);
+                Items.Add(first);
 
                 var children = DirectoryStructure.GetDirectoryContents(Items[0].GetParent);
 
                 // Populate the View with the folder's content
                 foreach (var child in children.Select(content => new DirectoryItemViewModel(content.FullPath, content.Type)))
                 {
-                    DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.Add(child);
+                    Items.Add(child);
                 }
             }
         }

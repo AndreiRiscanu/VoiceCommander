@@ -2,6 +2,7 @@
 using System.Linq;
 using System.IO;
 using VoiceCommander.Data;
+using VoiceCommander.ViewModels;
 
 namespace VoiceCommander
 {
@@ -41,7 +42,6 @@ namespace VoiceCommander
 
             #region Get Files
 
-
             // Try and get files from the folder ignoring any issues doing so
             try
             {
@@ -79,6 +79,11 @@ namespace VoiceCommander
 
             // Return the name after the last backslash
             return path.Substring(lastIndex + 1);
+        }
+
+        public static string getElementAtPosition(int pos)
+        {
+            return DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[pos].FullPath;
         }
 
         #endregion

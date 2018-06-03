@@ -43,6 +43,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Speech" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -64,7 +65,9 @@
     <Compile Include="CodeBehind\CommandLine\Command.cs" />
     <Compile Include="CodeBehind\CommandLine\LineCommands.cs" />
     <Compile Include="CodeBehind\CommandLine\Register.cs" />
+    <Compile Include="CodeBehind\Commands\AsyncCommandBase.cs" />
     <Compile Include="CodeBehind\Commands\ExecuteCommand.cs" />
+    <Compile Include="CodeBehind\Commands\IAsyncCommand.cs" />
     <Compile Include="CodeBehind\Converters\GridWidthToListViewWidthConverter.cs" />
     <Compile Include="CodeBehind\Converters\ImageSizeToFontSizeConverter.cs" />
     <Compile Include="CodeBehind\DirectoryStructure.cs" />
@@ -72,6 +75,7 @@
     <Compile Include="CodeBehind\Data\DirectoryItemType.cs" />
     <Compile Include="CodeBehind\Converters\HeaderToImageConverter.cs" />
     <Compile Include="CodeBehind\Helpers\OutputStrings.cs" />
+    <Compile Include="CodeBehind\SpeechFunctionality.cs" />
     <Compile Include="CodeBehind\ViewModels\BaseViewModel.cs" />
     <Compile Include="CodeBehind\ViewModels\CommandLineViewModel.cs" />
     <Compile Include="CodeBehind\ViewModels\DirectoryItemViewModel.cs" />
@@ -137,7 +141,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include="UI\packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

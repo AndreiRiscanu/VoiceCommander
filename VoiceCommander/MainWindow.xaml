@@ -15,8 +15,7 @@
         <DockPanel DockPanel.Dock="Top">
 
             <ui:MenuView DockPanel.Dock="Top"/>
-            <TextBox DockPanel.Dock="Top"
-                     Background="#eee"
+            <TextBox Background="#eee"
                      Padding="5,1,5,1"
                      Margin="5,0,5,1"
                      IsReadOnly="True"
