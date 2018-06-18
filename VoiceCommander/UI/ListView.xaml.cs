@@ -36,7 +36,7 @@ namespace VoiceCommander.UI
                     // Get the first item in the ListView
                     var firstItem = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items.First();
 
-                    // Only go back if we're not in the root
+                    // Only go back if we're not in root
                     if (firstItem.Name == "..")
                         firstItem.EnterCommand.Execute(null);
                     break;

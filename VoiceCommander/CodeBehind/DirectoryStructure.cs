@@ -11,7 +11,7 @@ namespace VoiceCommander
         public static int numberOfItems = 0;
 
         /// <summary>
-        /// Gets all logical drives on the computer
+        /// Gets the logical drives on the computer
         /// </summary>
         /// <returns></returns>
         public static List<DirectoryItem> GetLogicalDrives()

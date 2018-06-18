@@ -9,11 +9,6 @@
     
     <!-- TODO: Implement options -->
     <Menu Padding="1" Background="#E0C9AD">
-        <MenuItem Header="Menu">
-            <MenuItem Header="1" />
-            <MenuItem Header="2" />
-            <MenuItem Header="3" />
-        </MenuItem>
 
         <MenuItem Header="Options">
             <MenuItem Header="1" />
