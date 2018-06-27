@@ -5,6 +5,7 @@ using System.Windows.Input;
 using VoiceCommander.CodeBehind.ViewModels;
 using VoiceCommander.CommandLine;
 using VoiceCommander.Commands;
+using VoiceCommander.Helpers;
 
 namespace VoiceCommander.ViewModels
 {
@@ -14,22 +15,22 @@ namespace VoiceCommander.ViewModels
 
         public ICommand ExecuteCommand { get; set; }
 
-        public string currentCommand { get; set; } = "";
+        public string CurrentCommand { get; set; } = "";
         
         public CommandLineViewModel()
         {
             this.ExecuteCommand = new ExecuteCommand(this.GetCommand);
 
-            commandHistory = new List<string>();
+            CommandHistory = new List<string>();
         }
 
         #endregion Public Members
 
         #region Private Members
 
-        private List<string> commandHistory { get; set; }
+        private List<string> CommandHistory { get; set; }
 
-        private int commandIndex = 0;
+        private int CommandIndex = 0;
 
         /// <summary>
         /// Execute the command, if it exists
@@ -38,50 +39,52 @@ namespace VoiceCommander.ViewModels
         private void GetCommand(string parameter)
         {
             #region Switch Command
-
-            if (parameter != null)
+            
+            if (parameter == "Up")
             {
-                if (parameter == "Up")
+                // Don't overflow
+                if (CommandIndex < CommandHistory.Count)
                 {
-                    // Don't overflow
-                    if (commandIndex < commandHistory.Count)
-                    {
-                        // Move index to previous command
-                        commandIndex += commandIndex == commandHistory.Count ? 0 : 1;
+                    // Move index to previous command
+                    CommandIndex += CommandIndex == CommandHistory.Count ? 0 : 1;
 
-                        currentCommand = commandHistory[commandHistory.Count - commandIndex];
-                    }
-
-                    return;
+                    CurrentCommand = CommandHistory[CommandHistory.Count - CommandIndex];
                 }
-                else if (parameter == "Down")
+
+                return;
+            }
+            else if (parameter == "Down")
+            {
+                if (CommandIndex > 0)
                 {
-                    if (commandIndex > 0)
-                    {
-                        // Move index to next command
-                        commandIndex -= commandIndex == 1 ? 0 : 1;
+                    // Move index to next command
+                    CommandIndex -= CommandIndex == 1 ? 0 : 1;
 
-                        currentCommand = commandHistory[commandHistory.Count - commandIndex];
-                    }
-
-                    return;
+                    CurrentCommand = CommandHistory[CommandHistory.Count - CommandIndex];
                 }
+
+                return;
             }
 
             #endregion
 
             if (parameter == "Paste")
             {
-                currentCommand += DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent;
+                CurrentCommand += DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent;
+
+                return;
+            } else if (parameter == "Help")
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILECREATED;
 
                 return;
             }
 
-            if (currentCommand == null || currentCommand == "")
+            if (CurrentCommand == null || CurrentCommand == "")
                 return;
             
             // Split the command from the arguments, removing any white spaces
-            string[] param = currentCommand.Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] param = CurrentCommand.Split(new Char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
             ManageCommands();
 
@@ -107,7 +110,7 @@ namespace VoiceCommander.ViewModels
                 DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
             }
             else
-                CodeBehind.ViewModels.OutputStringItemViewModel.GetOutputStringInstance().output = "Invalid Command";
+                CodeBehind.ViewModels.OutputStringItemViewModel.GetOutputStringInstance().Output = "Invalid Command";
         }
 
         /// <summary>
@@ -145,14 +148,14 @@ namespace VoiceCommander.ViewModels
         /// </summary>
         private void ManageCommands()
         {
-            commandHistory.Add(currentCommand);
-            commandIndex = 0;
-            currentCommand = "";
+            CommandHistory.Add(CurrentCommand);
+            CommandIndex = 0;
+            CurrentCommand = "";
 
             // Save only the last 20 commands
-            if (commandHistory.Count > 20)
+            if (CommandHistory.Count > 20)
             {
-                commandHistory.RemoveAt(0);
+                CommandHistory.RemoveAt(0);
             }
         }
 

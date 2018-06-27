@@ -11,8 +11,8 @@
              IsReadOnly="True"
              AcceptsReturn="True"
              TextWrapping="Wrap"
-             FontSize="{Binding fontSize}"
+             FontSize="{Binding FontSize}"
              Background="#fdfaf4"
-             Text="{Binding output, Mode=TwoWay}" />
+             Text="{Binding Output, Mode=TwoWay}" />
 
 </UserControl>

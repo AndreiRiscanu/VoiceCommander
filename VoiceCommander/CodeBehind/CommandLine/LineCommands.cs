@@ -7,7 +7,7 @@ using VoiceCommander.ViewModels;
 
 namespace VoiceCommander.CommandLine
 {
-    public abstract class LineCommands
+    public class LineCommands
     {
         #region Public Methods
 
@@ -22,12 +22,12 @@ namespace VoiceCommander.CommandLine
             // The parent directory isn't taken into account
             if (items[0].Name == "..")
             {
-                OutputStringItemViewModel.GetOutputStringInstance().output = (items.Count - 1).ToString();
+                OutputStringItemViewModel.GetOutputStringInstance().Output = (items.Count - 1).ToString();
 
                 return;
             }
 
-            OutputStringItemViewModel.GetOutputStringInstance().output = items.Count.ToString();
+            OutputStringItemViewModel.GetOutputStringInstance().Output = items.Count.ToString();
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace VoiceCommander.CommandLine
         /// <param name="parameters"></param>
         public static void Clear(string[] parameters)
         {
-            OutputStringItemViewModel.GetOutputStringInstance().output = "";
+            OutputStringItemViewModel.GetOutputStringInstance().Output = "";
         }
 
         /// <summary>
@@ -57,14 +57,14 @@ namespace VoiceCommander.CommandLine
             {
                 if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].Name != "..")
                 {
-                    OutputStringItemViewModel.GetOutputStringInstance().output = "root";
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = "root";
 
                     return;
                 }
 
                 var item = new DirectoryInfo(DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].FullPath);
 
-                OutputStringItemViewModel.GetOutputStringInstance().output = item.Attributes.ToString() + "\nName: " + item.Name + "\nLast access time: " + item.LastAccessTime;
+                OutputStringItemViewModel.GetOutputStringInstance().Output = item.Attributes.ToString() + "\nName: " + item.Name + "\nLast access time: " + item.LastAccessTime;
             }
         }
 
@@ -88,7 +88,7 @@ namespace VoiceCommander.CommandLine
 
                 // Font size shouldn't be too small or too big
                 if (size >= 10 && size <= 100)
-                    OutputStringItemViewModel.GetOutputStringInstance().fontSize = size;
+                    OutputStringItemViewModel.GetOutputStringInstance().FontSize = size;
             }
         }
 
@@ -130,6 +130,8 @@ namespace VoiceCommander.CommandLine
                     PopulateGivenPath(path);
                 }
             }
+
+            DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
         }
 
         /// <summary>
@@ -164,7 +166,7 @@ namespace VoiceCommander.CommandLine
             // No file name given
             if (parameters == null)
             {
-                OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.NONAME;
+                OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILECREATIONERROR + OutputStrings.NONAME;
 
                 return;
             }
@@ -177,7 +179,7 @@ namespace VoiceCommander.CommandLine
                 // The name given contains illegal characters
                 if (StringContainsIllegalCharacters(parameters[1]))
                 {
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.ILLEGALCHARACTERS;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILECREATIONERROR + OutputStrings.ILLEGALCHARACTERS;
 
                     return;
                 }
@@ -188,14 +190,14 @@ namespace VoiceCommander.CommandLine
                         // File can be created
                         File.Create(@parameters[0] + '\\' + parameters[1]);
 
-                        OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATED;
+                        OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILECREATED;
                     }
                     else
                         // A file with this name already exists
-                        OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.EXISTSERROR;
+                        OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILECREATIONERROR + OutputStrings.EXISTSERROR;
                 else
                     // Path given is inexistent
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.PATHERROR;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILECREATIONERROR + OutputStrings.PATHERROR;
 
             #endregion
             }
@@ -206,7 +208,7 @@ namespace VoiceCommander.CommandLine
                 // We cannot create a file if we are in the root
                 if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].Name != "..")
                 {
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.ROOT;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILECREATIONERROR + OutputStrings.ROOT;
 
                     return;
                 }
@@ -214,7 +216,7 @@ namespace VoiceCommander.CommandLine
                 // The name given contains illegal characters
                 if (StringContainsIllegalCharacters(parameters[0]))
                 {
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.ILLEGALCHARACTERS;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILECREATIONERROR + OutputStrings.ILLEGALCHARACTERS;
 
                     return;
                 }
@@ -223,10 +225,10 @@ namespace VoiceCommander.CommandLine
                 {
                     File.Create(DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + parameters[0]);
 
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATED;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILECREATED;
                 }
                 else
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILECREATIONERROR + OutputStrings.EXISTSERROR;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILECREATIONERROR + OutputStrings.EXISTSERROR;
 
                 #endregion
             }
@@ -248,7 +250,7 @@ namespace VoiceCommander.CommandLine
 
                 File.Delete(@parameters[0]);
 
-                OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILEDELETED;
+                OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILEDELETED;
 
                 #endregion
             }
@@ -259,7 +261,7 @@ namespace VoiceCommander.CommandLine
                 // We cannot delete a file if we are in the root
                 if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].Name != "..")
                 {
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILEDELETIONERROR + OutputStrings.ROOT;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILEDELETIONERROR + OutputStrings.ROOT;
 
                     return;
                 }
@@ -270,10 +272,10 @@ namespace VoiceCommander.CommandLine
                 {
                     File.Delete(filePath);
 
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILEDELETED;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILEDELETED;
                 }
                 else
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FILEDELETIONERROR + OutputStrings.DOESNTEXISTERROR;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILEDELETIONERROR + OutputStrings.DOESNTEXISTERROR;
 
                 #endregion
             }
@@ -287,7 +289,7 @@ namespace VoiceCommander.CommandLine
         {
             if (parameters == null)
             {
-                OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.NONAME;
+                OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.NONAME;
 
                 return;
             }
@@ -299,7 +301,7 @@ namespace VoiceCommander.CommandLine
 
                 if (StringContainsIllegalCharacters(parameters[1]))
                 {
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.ILLEGALCHARACTERS;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.ILLEGALCHARACTERS;
 
                     return;
                 }
@@ -310,14 +312,14 @@ namespace VoiceCommander.CommandLine
                         // Folder can be created
                         Directory.CreateDirectory(@parameters[0] + '\\' + parameters[1]);
 
-                        OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATED;
+                        OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERCREATED;
                     }
                     else
                         // A folder with this name already exists
-                        OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.EXISTSERROR;
+                        OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.EXISTSERROR;
                 else
                     // Path given is inexistent
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.PATHERROR;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.PATHERROR;
 
                 #endregion
             }
@@ -328,14 +330,14 @@ namespace VoiceCommander.CommandLine
                 // We cannot create a folder if we are in the root
                 if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].Name != "..")
                 {
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.ROOT;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.ROOT;
 
                     return;
                 }
 
                 if (StringContainsIllegalCharacters(parameters[0]))
                 {
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.ILLEGALCHARACTERS;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.ILLEGALCHARACTERS;
 
                     return;
                 }
@@ -344,10 +346,10 @@ namespace VoiceCommander.CommandLine
                 {
                     Directory.CreateDirectory(DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + parameters[0]);
 
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATED;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERCREATED;
                 }
                 else
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.EXISTSERROR;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERCREATIONERROR + OutputStrings.EXISTSERROR;
 
                 #endregion
             }
@@ -373,12 +375,12 @@ namespace VoiceCommander.CommandLine
                     Directory.Delete(@parameters[0]);
                 else
                 {
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETIONERROR + OutputStrings.FOLDERNOTEMPTY;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERDELETIONERROR + OutputStrings.FOLDERNOTEMPTY;
 
                     return;
                 }
 
-                OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETED;
+                OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERDELETED;
 
                 #endregion
             }
@@ -389,7 +391,7 @@ namespace VoiceCommander.CommandLine
                 // We cannot delete a file if we are in the root
                 if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].Name != "..")
                 {
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETIONERROR + OutputStrings.ROOT;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERDELETIONERROR + OutputStrings.ROOT;
 
                     return;
                 }
@@ -407,15 +409,15 @@ namespace VoiceCommander.CommandLine
                     // Specified folder is not empty
                     else
                     {
-                        OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETIONERROR + OutputStrings.FOLDERNOTEMPTY;
+                        OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERDELETIONERROR + OutputStrings.FOLDERNOTEMPTY;
 
                         return;
                     }
                     
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETED;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERDELETED;
                 }
                 else
-                    OutputStringItemViewModel.GetOutputStringInstance().output = OutputStrings.FOLDERDELETIONERROR + OutputStrings.DOESNTEXISTERROR;
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FOLDERDELETIONERROR + OutputStrings.DOESNTEXISTERROR;
 
                 #endregion
             }
@@ -429,7 +431,7 @@ namespace VoiceCommander.CommandLine
         {
             if (parameters.Length < 2)
             {
-                OutputStringItemViewModel.GetOutputStringInstance().output = "Not enough arguments given; should be: <old_file_name> <new_file_name>";
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "Not enough arguments given; should be: <old_file_name> <new_file_name>";
 
                 return;
             }
@@ -439,7 +441,7 @@ namespace VoiceCommander.CommandLine
             // The second argument shouldn't end with a '\' because it would mean that a path with no file name to be created was given
             if (newPath.EndsWith("\\"))
             {
-                OutputStringItemViewModel.GetOutputStringInstance().output = "No file name given";
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "No file name given";
 
                 return;
             }
@@ -447,7 +449,7 @@ namespace VoiceCommander.CommandLine
             // Check if the path given as new is valid
             if (!Directory.Exists(Path.GetDirectoryName(newPath)))
             {
-                OutputStringItemViewModel.GetOutputStringInstance().output = "The new path given is not valid";
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "The new path given is not valid";
 
                 return;
             }
@@ -455,7 +457,7 @@ namespace VoiceCommander.CommandLine
             // The new file name can't match an existing file or folder name
             if (File.Exists(newPath) || Directory.Exists(newPath))
             {
-                OutputStringItemViewModel.GetOutputStringInstance().output = "There already exists a file/folder with that name";
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "There already exists a file/folder with that name";
 
                 return;
             }
@@ -466,7 +468,7 @@ namespace VoiceCommander.CommandLine
 
                 // Only if the first argument is an existent file
                 if (!FileMoved(path, newPath))
-                    OutputStringItemViewModel.GetOutputStringInstance().output = "File to be moved or new path given is invalid";
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = "File to be moved or new path given is invalid";
             }
         }
 
@@ -476,23 +478,48 @@ namespace VoiceCommander.CommandLine
         /// <param name="parameters"></param>
         public static void FindFileOrFolder(string[] parameters)
         {
-            if (parameters == null)
+            if (parameters == null || parameters.Length < 2)
             {
-                OutputStringItemViewModel.GetOutputStringInstance().output = "No argument given";
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "Not enough arguments given";
 
                 return;
             }
 
-            if (!parameters[0].Contains("\\"))
+            if (!parameters[0].Contains("\\") && parameters[1].Contains("\\"))
             {
                 if (DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent == null)
                 {
-                    OutputStringItemViewModel.GetOutputStringInstance().output = "Please select a drive in which to search";
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = "Please select a drive in which to search";
 
                     return;
                 }
+            }
 
-                parameters[0].Insert(0, DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + "\\");
+            string[] paths;
+            try
+            {
+                if (parameters.Length == 3 && parameters[1] == "-r")
+                {
+                    paths =
+                        Directory.GetFiles(parameters[0], parameters[2], System.IO.SearchOption.AllDirectories);
+                }
+                else
+                {
+                    paths =
+                        Directory.GetFiles(parameters[0], parameters[1]);
+                }
+            } catch (Exception e)
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "Permission to folder denied";
+
+                return;
+            }
+
+            OutputStringItemViewModel.GetOutputStringInstance().Output = "";
+
+            foreach (var path in paths)
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().Output += path + "\n";
             }
         }
 
@@ -508,7 +535,7 @@ namespace VoiceCommander.CommandLine
                 // File can be moved safely
                 File.Move(path, newPath);
 
-                OutputStringItemViewModel.GetOutputStringInstance().output = "File moved";
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "File moved";
 
                 return true;
             }
@@ -523,7 +550,7 @@ namespace VoiceCommander.CommandLine
             {
                 var item = new DirectoryInfo(path);
 
-                OutputStringItemViewModel.GetOutputStringInstance().output = item.Attributes.ToString() + "\nName: " + item.Name + "\nLast access time: " + item.LastAccessTime;
+                OutputStringItemViewModel.GetOutputStringInstance().Output = item.Attributes.ToString() + "\nName: " + item.Name + "\nLast access time: " + item.LastAccessTime;
 
                 return true;
             }
@@ -532,7 +559,7 @@ namespace VoiceCommander.CommandLine
             {
                 var item = new FileInfo(path);
 
-                OutputStringItemViewModel.GetOutputStringInstance().output = item.Attributes.ToString() + "\nName: " + item.Name + "\nLast access time: " + item.LastAccessTime + "\nSize: " + item.Length;
+                OutputStringItemViewModel.GetOutputStringInstance().Output = item.Attributes.ToString() + "\nName: " + item.Name + "\nLast access time: " + item.LastAccessTime + "\nSize: " + item.Length;
 
                 return true;
             }
@@ -546,10 +573,10 @@ namespace VoiceCommander.CommandLine
             Int64 fileSize = new FileInfo(path).Length;
 
             // Don't open files too big, might be a picture or a movie
-            if (fileSize < 500000)
-                OutputStringItemViewModel.GetOutputStringInstance().output = File.ReadAllText(path, System.Text.Encoding.UTF8);
+            if (fileSize < 200000)
+                OutputStringItemViewModel.GetOutputStringInstance().Output = File.ReadAllText(path, System.Text.Encoding.UTF8);
             else
-                OutputStringItemViewModel.GetOutputStringInstance().output = "Could not read: File size too big.";
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "Could not read: File size too big.";
         }
 
         private static void PopulateGivenPath(string path)

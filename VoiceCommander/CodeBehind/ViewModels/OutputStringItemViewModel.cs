@@ -4,11 +4,9 @@ namespace VoiceCommander.CodeBehind.ViewModels
 {
     public class OutputStringItemViewModel : BaseViewModel
     {
-        public string output { get; set; }
+        public string Output { get; set; }
 
-        public int fontSize { get; set; } = 12;
-
-        public static OutputStringItemViewModel OutputStringInstance = new OutputStringItemViewModel();
+        public int FontSize { get; set; } = 12;
 
         public static OutputStringItemViewModel GetOutputStringInstance()
         {
@@ -16,5 +14,7 @@ namespace VoiceCommander.CodeBehind.ViewModels
         }
 
         private OutputStringItemViewModel() { }
+
+        private static OutputStringItemViewModel OutputStringInstance = new OutputStringItemViewModel();
     }
 }

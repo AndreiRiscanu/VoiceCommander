@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.Linq;
 using System.Windows.Input;
+using VoiceCommander.CommandLine;
 using VoiceCommander.Commands;
 using VoiceCommander.Data;
 
@@ -37,7 +38,7 @@ namespace VoiceCommander.ViewModels
         /// <summary>
         /// The number to show on the left side of the item
         /// </summary>
-        public int itemIndex { get; set; }
+        public int ItemIndex { get; set; }
 
         public ICommand EnterCommand { get; set; }
 
@@ -69,7 +70,7 @@ namespace VoiceCommander.ViewModels
             this.FullPath = fullPath;
             this.Type = type;
 
-            itemIndex = DirectoryStructure.numberOfItems++;
+            ItemIndex = DirectoryStructure.numberOfItems++;
         }
 
         #endregion
@@ -83,7 +84,11 @@ namespace VoiceCommander.ViewModels
         {
             // We cannot enter a file
             if (this.Type == DirectoryItemType.File)
+            {
+                Command.Execute("read", new string[] { this.FullPath });
+
                 return;
+            }
 
             DirectoryInfo parentInfo = new DirectoryInfo(this.FullPath);
 

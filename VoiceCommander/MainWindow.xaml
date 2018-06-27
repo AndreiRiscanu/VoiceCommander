@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:VoiceCommander"
         xmlns:ui="clr-namespace:VoiceCommander.UI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="1000"
+        Title="VoiceCommander" Height="600" Width="1000"
                            MinHeight="200" MinWidth="400">
 
     <DockPanel Background="#E0C9AD">

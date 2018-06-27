@@ -44,7 +44,7 @@
                             CornerRadius="7"
                             VerticalAlignment="Center"
                             Height="{Binding ActualHeight, ElementName=itemType}">
-                        <TextBlock Text="{Binding itemIndex}"
+                        <TextBlock Text="{Binding ItemIndex}"
                                    VerticalAlignment="Center"
                                    HorizontalAlignment="Center"
                                    TextWrapping="WrapWithOverflow"/>
@@ -62,8 +62,14 @@
                                VerticalAlignment="Center"
                                FontSize="{Binding ActualHeight,
                                ElementName=itemType, Converter={x:Static converter:ImageSizeToFontSizeConverter.Instance}}"
-                               Text="{Binding Name}" />
-                    
+                               Text="{Binding Name}" >
+                        <TextBlock.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem Header="Delete" Click="Delete" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"/>
+                            </ContextMenu>
+                        </TextBlock.ContextMenu>
+                    </TextBlock>
+
                     <!-- The command to enter a drive/folder is called from here -->
                     <Grid.InputBindings>
                         <MouseBinding Gesture="LeftDoubleClick" Command="{Binding EnterCommand, Mode=TwoWay}" />

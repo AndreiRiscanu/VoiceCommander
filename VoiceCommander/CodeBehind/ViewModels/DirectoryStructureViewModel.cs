@@ -26,7 +26,8 @@ namespace VoiceCommander.ViewModels
         {
             var children = DirectoryStructure.GetLogicalDrives();
 
-            Items = new ObservableCollection<DirectoryItemViewModel>(children.Select(drive => new DirectoryItemViewModel(drive.FullPath, DirectoryItemType.Drive)));
+            Items = new ObservableCollection<DirectoryItemViewModel>(children.Select
+                (drive => new DirectoryItemViewModel(drive.FullPath, DirectoryItemType.Drive)));
         }
 
         /// <summary>

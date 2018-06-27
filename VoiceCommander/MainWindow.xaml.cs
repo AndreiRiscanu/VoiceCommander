@@ -12,6 +12,7 @@ namespace VoiceCommander
         public MainWindow()
         {
             InitializeComponent();
+
             SpeechFunctionality.InitializeSpeechFunctionality();
 
             this.DataContext = DirectoryStructureViewModel.GetDirectoryStructureInstance();
