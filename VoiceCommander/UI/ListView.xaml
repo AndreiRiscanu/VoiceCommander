@@ -66,6 +66,9 @@
                         <TextBlock.ContextMenu>
                             <ContextMenu>
                                 <MenuItem Header="Delete" Click="Delete" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"/>
+                                <MenuItem Header="Info" Click="Info" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"/>
+                                <MenuItem Header="Copy" Click="Copy" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"/>
+                                <MenuItem Header="Paste" Click="Paste" Name="PasteMenuItem" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=Parent}"/>
                             </ContextMenu>
                         </TextBlock.ContextMenu>
                     </TextBlock>

@@ -75,7 +75,7 @@ namespace VoiceCommander.ViewModels
                 return;
             } else if (parameter == "Help")
             {
-                OutputStringItemViewModel.GetOutputStringInstance().Output = OutputStrings.FILECREATED;
+                Command.Execute("help", null);
 
                 return;
             }
@@ -94,8 +94,11 @@ namespace VoiceCommander.ViewModels
                 // And at least one parameter was given
                 if (param.Length > 1)
                 {
-                    param[1] = ConvertToPath(param[1]);
-
+                    for (int i = 1; i < param.Length; ++i)
+                    {
+                        param[i] = ConvertToPath(param[i]);
+                    }
+                    
                     // Execute the command with the given parameters
                     Command.Execute(param[0], param.Skip(1).ToArray());
 

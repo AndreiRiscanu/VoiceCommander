@@ -21,6 +21,8 @@ namespace VoiceCommander.UI
     /// </summary>
     public partial class ListView : UserControl
     {
+        private string CopyPath = "";
+
         public ListView()
         {
             InitializeComponent();
@@ -100,6 +102,79 @@ namespace VoiceCommander.UI
                     }
 
                     DirectoryStructureViewModel.GetDirectoryStructureInstance().Refresh();
+
+                    return;
+                }
+            }
+        }
+
+        private void Info(object sender, RoutedEventArgs e)
+        {
+            TextBlock textBlock = ConvertElement(sender);
+
+            if (textBlock == null)
+            {
+                return;
+            }
+
+            foreach (var item in DirectoryStructureViewModel.GetDirectoryStructureInstance().Items)
+            {
+                if (item.Name == textBlock.Text)
+                {
+                    Command.Execute("info", new string[] { item.FullPath });
+
+                    return;
+                }
+            }
+        }
+
+        private void Copy(object sender, RoutedEventArgs e)
+        {
+            TextBlock textBlock = ConvertElement(sender);
+
+            if (textBlock == null)
+            {
+                return;
+            }
+
+            foreach (var item in DirectoryStructureViewModel.GetDirectoryStructureInstance().Items)
+            {
+                if (item.Name == textBlock.Text)
+                {
+                    CopyPath = item.FullPath;
+
+                    return;
+                }
+            }
+        }
+
+        private void Paste(object sender, RoutedEventArgs e)
+        {
+            if (CopyPath == "")
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "No file selected for copy.";
+
+                return;
+            }
+
+            TextBlock textBlock = ConvertElement(sender);
+
+            if (textBlock == null)
+            {
+                return;
+            }
+
+            foreach (var item in DirectoryStructureViewModel.GetDirectoryStructureInstance().Items)
+            {
+                if (item.Name == textBlock.Text)
+                {
+                    if (item.Type == DirectoryItemType.File)
+                    {
+                        Command.Execute("cp", new string[] { CopyPath, item.GetParent });
+
+                        return;
+                    }
+                    Command.Execute("cp", new string[] { CopyPath, item.FullPath });
 
                     return;
                 }

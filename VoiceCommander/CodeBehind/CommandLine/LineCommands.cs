@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using VoiceCommander.CodeBehind.ViewModels;
@@ -64,7 +65,8 @@ namespace VoiceCommander.CommandLine
 
                 var item = new DirectoryInfo(DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].FullPath);
 
-                OutputStringItemViewModel.GetOutputStringInstance().Output = item.Attributes.ToString() + "\nName: " + item.Name + "\nLast access time: " + item.LastAccessTime;
+                OutputStringItemViewModel.GetOutputStringInstance().Output = item.Attributes.ToString()
+                    + "\nName: " + item.Name + "\nLast access time: " + item.LastAccessTime;
             }
         }
 
@@ -371,7 +373,7 @@ namespace VoiceCommander.CommandLine
 
                 if (parameters.Length > 1 && parameters[1] == "-r")
                     Directory.Delete(@parameters[0], true);
-                else if (Directory.GetFiles(@parameters[0]).Length == 0)
+                else if (Directory.GetFiles(@parameters[0]).Length == 0 && Directory.GetDirectories(parameters[0]).Length == 0)
                     Directory.Delete(@parameters[0]);
                 else
                 {
@@ -423,6 +425,35 @@ namespace VoiceCommander.CommandLine
             }
         }
 
+        public static void CopyFile(string[] parameters)
+        {
+            if (parameters.Length < 2)
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "Not enough arguments given; should be: <copy_file_name> <new_file_name>";
+
+                return;
+            }
+
+            var newPath = parameters[1];
+
+            // Check if the path given as new is valid
+            if (!Directory.Exists(Path.GetDirectoryName(newPath)))
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "The path given is not valid";
+
+                return;
+            }
+
+            if (!FileCopied(parameters[0], newPath))
+            {
+                var path = DirectoryStructureViewModel.GetDirectoryStructureInstance().Items[0].GetParent + '\\' + parameters[0];
+
+                // Only if the first argument is an existent file
+                if (!FileCopied(path, newPath))
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = "File to be moved or new path given is invalid";
+            }
+        }
+
         /// <summary>
         /// Rename a given file
         /// </summary>
@@ -455,9 +486,16 @@ namespace VoiceCommander.CommandLine
             }
 
             // The new file name can't match an existing file or folder name
-            if (File.Exists(newPath) || Directory.Exists(newPath))
+            if (File.Exists(newPath))
             {
-                OutputStringItemViewModel.GetOutputStringInstance().Output = "There already exists a file/folder with that name";
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "There already exists a file with that name";
+
+                return;
+            }
+
+            if (!Directory.Exists(newPath) || File.Exists(Path.Combine(newPath, Path.GetFileName(parameters[0]))))
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "There already exists a file with that name";
 
                 return;
             }
@@ -468,7 +506,7 @@ namespace VoiceCommander.CommandLine
 
                 // Only if the first argument is an existent file
                 if (!FileMoved(path, newPath))
-                    OutputStringItemViewModel.GetOutputStringInstance().Output = "File to be moved or new path given is invalid";
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = "File to be copied or new path given is invalid";
             }
         }
 
@@ -523,6 +561,39 @@ namespace VoiceCommander.CommandLine
             }
         }
 
+        public static void ShowHelp(string[] parameters)
+        {
+            try
+            {
+                Process.Start("Help.chm", null);
+            }
+            catch (Exception e)
+            {
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "Could not open help file; " +
+                    "it could be missing or you don't have permission to open it.";
+            }
+        }
+
+        public static void MaximizeWindow(string[] parameters)
+        {
+            Application.Current.MainWindow.WindowState = WindowState.Maximized;
+        }
+
+        public static void MinimizeWindow(string[] parameters)
+        {
+            Application.Current.MainWindow.WindowState = WindowState.Minimized;
+        }
+
+        public static void NormalWindow(string[] parameters)
+        {
+            Application.Current.MainWindow.WindowState = WindowState.Normal;
+        }
+
+        public static void Exit(string[] parameters)
+        {
+            Application.Current.Shutdown();
+        }
+
         #endregion
 
 
@@ -533,9 +604,42 @@ namespace VoiceCommander.CommandLine
             if (File.Exists(path))
             {
                 // File can be moved safely
-                File.Move(path, newPath);
+                try
+                {
+                    File.Move(path, Path.Combine(newPath, Path.GetFileName(path)));
+                }
+                catch (Exception e)
+                {
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = "File could not be copied; there may already be a file with this name.";
+
+                    return false;
+                }
 
                 OutputStringItemViewModel.GetOutputStringInstance().Output = "File moved";
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool FileCopied(string toCopy, string toPaste)
+        {
+            if (File.Exists(toCopy))
+            {
+                string Paste = Path.Combine(toPaste, Path.GetFileName(toCopy));
+                // File can be moved safely
+                try
+                {
+                    File.Copy(toCopy, Paste);
+                }
+                catch (Exception e)
+                {
+                    OutputStringItemViewModel.GetOutputStringInstance().Output = 
+                        "File could not be copied; path invalid or a file with that name already exists";
+                }
+
+                OutputStringItemViewModel.GetOutputStringInstance().Output = "File copied";
 
                 return true;
             }
@@ -548,9 +652,27 @@ namespace VoiceCommander.CommandLine
             // Check if the directory exists and show its info
             if (Directory.Exists(path))
             {
-                var item = new DirectoryInfo(path);
+                var Item = new DirectoryInfo(path);
+                long TotalSize = 0;
+                string[] Files = null;
+                try
+                {
+                    Files = Directory.GetFiles(path, "*.*");
+                }
+                catch (Exception e)
+                {
+                    return true;
+                }
 
-                OutputStringItemViewModel.GetOutputStringInstance().Output = item.Attributes.ToString() + "\nName: " + item.Name + "\nLast access time: " + item.LastAccessTime;
+                foreach (string name in Files)
+                {
+                    FileInfo info = new FileInfo(name);
+                    TotalSize += info.Length;
+                }
+
+                OutputStringItemViewModel.GetOutputStringInstance().Output = Item.Attributes.ToString()
+                    + "\nName: " + Item.Name + "\nSize: " + (((TotalSize / 1024.0) / 1024.0) / 1024.0).ToString("0.00")
+                    + " GB\nLast access time: " + Item.LastAccessTime;
 
                 return true;
             }
@@ -559,7 +681,9 @@ namespace VoiceCommander.CommandLine
             {
                 var item = new FileInfo(path);
 
-                OutputStringItemViewModel.GetOutputStringInstance().Output = item.Attributes.ToString() + "\nName: " + item.Name + "\nLast access time: " + item.LastAccessTime + "\nSize: " + item.Length;
+                OutputStringItemViewModel.GetOutputStringInstance().Output = item.Attributes.ToString()
+                    + "\nName: " + item.Name + "\nSize: " + (((item.Length / 1024.0) / 1024.0) / 1024.0).ToString("0.00")
+                    + "GB\nLast access time: " + item.LastAccessTime;
 
                 return true;
             }

@@ -20,7 +20,8 @@ namespace VoiceCommander.CodeBehind
 
         public static SpeechRecognitionEngine recognizer = new SpeechRecognitionEngine();
         private static Choices Commands = new Choices(new string[] { "count", "back", "clear",
-            "enter", "fontsize", "info", "read", "file", "folder", "delete" });
+            "enter", "fontsize", "info", "read", "file", "folder", "delete", "maximize", "minimize",
+            "normal", "help" });
         private static Choices Numbers = new Choices(PopulateWithNumbers(100));
         private static Choices Alphabet = new Choices(new string[] {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
             "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" });
@@ -58,6 +59,21 @@ namespace VoiceCommander.CodeBehind
                     break;
                 case "clear":
                     Command.Execute("clear", null);
+                    break;
+                case "maximize":
+                    Command.Execute("mx", null);
+                    break;
+                case "minimize":
+                    Command.Execute("mz", null);
+                    break;
+                case "normal":
+                    Command.Execute("nm", null);
+                    break;
+                case "help":
+                    Command.Execute("help", null);
+                    break;
+                case "exit":
+                    Command.Execute("exit", null);
                     break;
                 case "enter": case "fontsize": case "info": case "read": case "delete":
                     Thread thread = new Thread(ChangeCom);
