@@ -18,4 +18,6 @@ namespace VoiceCommander.UI
             CommandLine.Register reg = new CommandLine.Register();
         }
     }
+
+
 }

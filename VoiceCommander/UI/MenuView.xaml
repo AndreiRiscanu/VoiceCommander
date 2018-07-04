@@ -11,16 +11,10 @@
     <Menu Padding="1" Background="#E0C9AD">
 
         <MenuItem Header="Options">
-            <MenuItem Header="1" />
-            <MenuItem Header="2" />
-            <MenuItem Header="3" />
+            <MenuItem Header="Disable voice recognition" Click="DisableEnableVoiceRec" />
         </MenuItem>
 
-        <MenuItem Header="Help">
-            <MenuItem Header="1" />
-            <MenuItem Header="2" />
-            <MenuItem Header="3" />
-        </MenuItem>
+        <MenuItem Header="Help" Click="ShowHelp" />
     </Menu>
     
 </UserControl>

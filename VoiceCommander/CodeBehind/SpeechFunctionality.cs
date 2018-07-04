@@ -18,10 +18,10 @@ namespace VoiceCommander.CodeBehind
     {
         static string command = null;
 
-        public static SpeechRecognitionEngine recognizer = new SpeechRecognitionEngine();
+        private static SpeechRecognitionEngine recognizer = null;
         private static Choices Commands = new Choices(new string[] { "count", "back", "clear",
-            "enter", "fontsize", "info", "read", "file", "folder", "delete", "maximize", "minimize",
-            "normal", "help" });
+            "enter", "fontsize", "info", "view", "file", "folder", "delete", "maximize", "minimize",
+            "normal", "help", "exit" });
         private static Choices Numbers = new Choices(PopulateWithNumbers(100));
         private static Choices Alphabet = new Choices(new string[] {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o",
             "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" });
@@ -29,8 +29,22 @@ namespace VoiceCommander.CodeBehind
         private static Grammar NumbersGrammar = new Grammar(new GrammarBuilder(Numbers, 0, 1));
         private static Grammar AlphabetGrammar = new Grammar(new GrammarBuilder(Alphabet, 0, 10));
 
+        public static void DeactivateSpeechRecognition()
+        {
+            recognizer.RecognizeAsyncStop();
+            recognizer.UnloadAllGrammars();
+            recognizer.SpeechRecognized -= sre_SpeechRecognized;
+            recognizer = null;
+        }
+
         public static void InitializeSpeechFunctionality()
         {
+            if (recognizer != null)
+            {
+                return;
+            }
+
+            recognizer = new SpeechRecognitionEngine();
             Choices Command = new Choices();
             recognizer.LoadGrammar(CommandsGrammar);
 
@@ -75,7 +89,7 @@ namespace VoiceCommander.CodeBehind
                 case "exit":
                     Command.Execute("exit", null);
                     break;
-                case "enter": case "fontsize": case "info": case "read": case "delete":
+                case "enter": case "fontsize": case "info": case "view": case "delete":
                     Thread thread = new Thread(ChangeCom);
                     thread.Start(NumbersGrammar);
                     break;
@@ -137,7 +151,7 @@ namespace VoiceCommander.CodeBehind
                     catch (Exception)
                     { }
                     break;
-                case "read":
+                case "view":
                     try
                     {
                         var Element = Int32.Parse(Param);
